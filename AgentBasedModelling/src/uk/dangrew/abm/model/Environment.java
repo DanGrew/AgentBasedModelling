@@ -21,10 +21,10 @@ public class Environment implements NeighbourHood {
       
       this.width = width;
       this.height = height;
-      this.environment = new EnvironmentElement[ width ][ height ];
-      for ( int i = 0; i < width; i++ ) {
-         for ( int j = 0; j < height; j++ ) {
-            environment[ i ][ j ] = EnvironmentElement.Space;
+      this.environment = new EnvironmentElement[ height ][ width ];
+      for ( int vertical = 0; vertical < height; vertical++ ) {
+         for ( int horizontal = 0; horizontal < width; horizontal++ ) {
+            environment[ vertical ][ horizontal ] = EnvironmentElement.Space;
          }
       }
    }//End Constructor
@@ -36,13 +36,33 @@ public class Environment implements NeighbourHood {
     * @param stepsEast the number of steps east, or west if negative.
     */
    public void applyHorizontalBoundary( EnvironmentPosition boundaryStartLocation, int stepsEast ) {
+      final int startY = boundaryStartLocation.horizontal();
       if ( stepsEast > 0 ) {
-         for ( int i = boundaryStartLocation.y(); i < boundaryStartLocation.y() + Math.abs( stepsEast ); i++ ) {
-            place( new EnvironmentPosition( boundaryStartLocation.x(), i ), EnvironmentElement.Boundary );
+         for ( int i = startY; i < startY + Math.abs( stepsEast ); i++ ) {
+            place( new EnvironmentPosition( boundaryStartLocation.vertical(), i ), EnvironmentElement.Boundary );
          }
       } else {
-         for ( int i = boundaryStartLocation.y(); i > boundaryStartLocation.y() - Math.abs( stepsEast ); i-- ) {
-            place( new EnvironmentPosition( boundaryStartLocation.x(), i ), EnvironmentElement.Boundary );
+         for ( int i = startY; i > startY - Math.abs( stepsEast ); i-- ) {
+            place( new EnvironmentPosition( boundaryStartLocation.vertical(), i ), EnvironmentElement.Boundary );
+         }
+      }
+   }//End Method
+   
+   /**
+    * Method to apply a vertical boundary from the given {@link EnvironmentPosition} with the given number
+    * of steps south, where negative would move north.
+    * @param boundaryStartLocation the {@link EnvironmentPosition} to start the boundary at.
+    * @param stepsSouth the number of steps south, or north if negative.
+    */
+   public void applyVerticalBoundary( EnvironmentPosition boundaryStartLocation, int stepsSouth ) {
+      final int startX = boundaryStartLocation.vertical();
+      if ( stepsSouth > 0 ) {
+         for ( int i = startX; i < startX + Math.abs( stepsSouth ); i++ ) {
+            place( new EnvironmentPosition( i, boundaryStartLocation.horizontal() ), EnvironmentElement.Boundary );
+         }
+      } else {
+         for ( int i = startX; i > startX - Math.abs( stepsSouth ); i-- ) {
+            place( new EnvironmentPosition( i, boundaryStartLocation.horizontal() ), EnvironmentElement.Boundary );
          }
       }
    }//End Method
@@ -53,7 +73,7 @@ public class Environment implements NeighbourHood {
     * @param element the {@link EnvironmentElement} at that position.
     */
    private void place( EnvironmentPosition position, EnvironmentElement element ) {
-      environment[ position.x() ][ position.y() ] = element;
+      environment[ position.vertical() ][ position.horizontal() ] = element;
    }//End Method
    
    /**
@@ -62,9 +82,19 @@ public class Environment implements NeighbourHood {
     * @return the {@link EnvironmentElement} at that position.
     */
    private EnvironmentElement element( EnvironmentPosition position ) {
-      return environment[ position.x() ][ position.y() ];
+      int vertical = position.vertical();
+      int horizontal = position.horizontal();
+      
+      if ( 
+               vertical < 0       || horizontal < 0 ||
+               vertical >= height || horizontal >= width 
+      ) {
+         return EnvironmentElement.Boundary;
+      }
+      
+      return environment[ vertical ][ horizontal ];
    }//End Method
-
+   
    /**
     * Method to determine whether the given {@link EnvironmentPosition} is a {@link EnvironmentElement#Boundary}.
     * @param position the {@link EnvironmentPosition} in question.

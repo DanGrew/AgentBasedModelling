@@ -11,11 +11,11 @@ import uk.dangrew.abm.model.EnvironmentPosition;
 public class Simulation {
    
    public static final void main( String[] args ) throws InterruptedException {
-      Environment environment = new Environment( 10, 10 );
-      environment.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 10 );
-      environment.applyHorizontalBoundary( new EnvironmentPosition( 9, 0 ), 10 );
+      Environment environment = new Environment( 100, 100 );
+      environment.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 100 );
+      environment.applyHorizontalBoundary( new EnvironmentPosition( 99, 0 ), 100 );
       
-      Agent agent = new AgentImpl( new EnvironmentPosition( 5, 5 ) );
+      Agent agent = new AgentImpl( new EnvironmentPosition( 5, 5 ), 10, 0 );
       System.out.println( agent.position() );
       
       while( true ) {

@@ -5,33 +5,33 @@ package uk.dangrew.abm.model;
  */
 public class EnvironmentPosition {
 
-   private final int x;
-   private final int y;
+   private final int vertical;
+   private final int horizontal;
    
    /**
     * Constructs a new {@link EnvironmentPosition}.
-    * @param x the x grid reference, the row.
-    * @param y the y grid reference, the column.
+    * @param vertical the vertical grid reference, the row.
+    * @param horizontal the horizontal grid reference, the column.
     */
-   public EnvironmentPosition( int x, int y ) {
-      this.x = x;
-      this.y = y;
+   public EnvironmentPosition( int vertical, int horizontal ) {
+      this.vertical = vertical;
+      this.horizontal = horizontal;
    }//End Constructor
 
    /**
     * Access to the row of the grid.
     * @return the row.
     */
-   public int x() {
-      return x;
+   public int vertical() {
+      return vertical;
    }//End Method
 
    /**
     * Access to the column of the grid.
     * @return the column.
     */
-   public int y() {
-      return y;
+   public int horizontal() {
+      return horizontal;
    }//End Method
    
    /**
@@ -40,7 +40,7 @@ public class EnvironmentPosition {
     * @return the {@link EnvironmentPosition} of this accounting for the offset.
     */
    public EnvironmentPosition horizontal( int offset ) {
-      return new EnvironmentPosition( x, y + offset );
+      return new EnvironmentPosition( vertical, horizontal + offset );
    }//End Method
    
    /**
@@ -49,7 +49,17 @@ public class EnvironmentPosition {
     * @return the {@link EnvironmentPosition} of this accounting for the offset.
     */
    public EnvironmentPosition vertical( int offset ) {
-      return new EnvironmentPosition( x + offset, y );
+      return new EnvironmentPosition( vertical + offset, horizontal );
+   }//End Method
+   
+   /**
+    * Method to construct a shift of this {@link EnvironmentPosition}.
+    * @param verticalOffset the vertical offset.
+    * @param horizontalOffset the horizontal offset.
+    * @return the {@link EnvironmentPosition} of this accounting for the offset.
+    */
+   public EnvironmentPosition translate( int verticalOffset, int horizontalOffset ) {
+      return new EnvironmentPosition( vertical + verticalOffset, horizontal + horizontalOffset );
    }//End Method
    
    /**
@@ -58,8 +68,8 @@ public class EnvironmentPosition {
    @Override public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + x;
-      result = prime * result + y;
+      result = prime * result + vertical;
+      result = prime * result + horizontal;
       return result;
    }//End Method
 
@@ -77,10 +87,10 @@ public class EnvironmentPosition {
          return false;
       }
       EnvironmentPosition other = ( EnvironmentPosition ) obj;
-      if ( x != other.x ) {
+      if ( vertical != other.vertical ) {
          return false;
       }
-      if ( y != other.y ) {
+      if ( horizontal != other.horizontal ) {
          return false;
       }
       return true;
@@ -90,7 +100,7 @@ public class EnvironmentPosition {
     * {@inheritDoc}
     */
    @Override public String toString() {
-      return "Location: " + x + ", " + y;
+      return "Location: " + vertical + ", " + horizontal;
    }//End Method
    
 }//End Class

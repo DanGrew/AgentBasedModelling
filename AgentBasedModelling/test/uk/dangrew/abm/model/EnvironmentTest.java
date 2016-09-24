@@ -36,8 +36,8 @@ public class EnvironmentTest {
    }//End Method
 
    @Test public void shouldInitiallyBeEmpty(){
-      for ( int i = 0; i < 10; i++ ) {
-         for ( int j = 0; j < 20; j++ ) {
+      for ( int i = 0; i < 20; i++ ) {
+         for ( int j = 0; j < 10; j++ ) {
             assertThat( systemUnderTest.isSpace( new EnvironmentPosition( i, j ) ), is( true ) );
          }
       }
@@ -68,6 +68,41 @@ public class EnvironmentTest {
    
    @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreNegativeHorizontalBoundaryBeyondEdges() {
       systemUnderTest.applyHorizontalBoundary( new EnvironmentPosition( 1, 0 ), -3 );
+   }//End Method
+   
+   @Test public void shouldProvideVerticalBoundary() {
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 4 );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 1, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 2, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 3, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 4, 0 ) ), is( false ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 4, 1 ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldProvideNegativeVerticalBoundary() {
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 5, 0 ), -2 );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 2, 0 ) ), is( false ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 3, 0 ) ), is( false ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 4, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 5, 0 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 6, 0 ) ), is( false ) );
+   }//End Method
+   
+   @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreVerticalBoundaryBeyondEdges() {
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 9, 19 ), 3 );
+   }//End Method
+   
+   @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreNegativeVerticalBoundaryBeyondEdges() {
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 1, 0 ), -3 );
+   }//End Method
+   
+   @Test public void shouldIdentifyAllOutsideEnvironmentAsBoundary(){
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( -1, -1 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( -1, 5 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 5, -1 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 11 ) ), is( true ) );
+      assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 21, 0 ) ), is( true ) );
    }//End Method
    
 }//End Class

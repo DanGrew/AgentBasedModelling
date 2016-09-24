@@ -19,8 +19,8 @@ public class EnvironmentPositionTest {
    }//End Method
 
    @Test public void shouldProvideGridReference() {
-      assertThat( systemUnderTest.x(), is( X ) );
-      assertThat( systemUnderTest.y(), is( Y ) );
+      assertThat( systemUnderTest.vertical(), is( X ) );
+      assertThat( systemUnderTest.horizontal(), is( Y ) );
    }//End Method
    
    @Test public void shouldBeEqual(){
@@ -52,6 +52,11 @@ public class EnvironmentPositionTest {
    @Test public void shouldProvideVerticalOffsetPosition(){
       assertThat( systemUnderTest.horizontal( 5 ), is( new EnvironmentPosition( X, Y + 5 ) ) );
       assertThat( systemUnderTest.horizontal( -5 ), is( new EnvironmentPosition( X, Y - 5 ) ) );
+   }//End Method
+   
+   @Test public void shouldProvideOffsetPosition(){
+      assertThat( systemUnderTest.translate( 10, 4 ), is( new EnvironmentPosition( X + 10, Y + 4 ) ) );
+      assertThat( systemUnderTest.translate( -6, -3 ), is( new EnvironmentPosition( X - 6, Y - 3 ) ) );
    }//End Method
 
 }//End Class
