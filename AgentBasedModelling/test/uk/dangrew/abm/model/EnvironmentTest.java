@@ -1,10 +1,15 @@
 package uk.dangrew.abm.model;
 
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 
 public class EnvironmentTest {
 
@@ -103,6 +108,39 @@ public class EnvironmentTest {
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 5, -1 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 11 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 21, 0 ) ), is( true ) );
+   }//End Method
+   
+   @Test public void shouldProvideEnvironmentPositions(){
+      assertThat( systemUnderTest.grid(), is( notNullValue() ) );
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 2 );
+      assertThat( systemUnderTest.grid().get( new EnvironmentPosition( 0, 0 ) ), is( EnvironmentElement.Boundary ) );
+   }//End Method
+   
+   @Test public void shouldMonitorAgent(){
+      Agent agent = new AgentImpl( new EnvironmentPosition( 5, 5 ), new Heading( 1, 1 ) );
+      systemUnderTest.monitorAgent( agent );
+      assertThat( systemUnderTest.agents(), hasEntry( new EnvironmentPosition( 5, 5 ), agent ) );
+   }//End Method
+   
+   @Test public void shouldUpdateAgentLocationWhenAgentMoves(){
+      Agent agent = new AgentImpl( new EnvironmentPosition( 5, 5 ), new Heading( 1, 1 ) );
+      systemUnderTest.monitorAgent( agent );
+      assertThat( systemUnderTest.agents(), hasEntry( new EnvironmentPosition( 5, 5 ), agent ) );
+      
+      agent.move( systemUnderTest );
+      assertThat( systemUnderTest.agents(), hasEntry( agent.position().get(), agent ) );
+   }//End Method
+   
+   @Test public void shouldNotReregisterForPositionChangesIfMonitoredAgain(){
+      //efficiency
+   }//End Method
+   
+   @Test public void shouldNotAllowModificationsToGrid(){
+      assertThat( systemUnderTest.grid(), is( instanceOf( UnmodifiableObservableMap.class ) ) );
+   }//End Method
+   
+   @Test public void shouldNotAllowModificationsToAgents(){
+      assertThat( systemUnderTest.agents(), is( instanceOf( UnmodifiableObservableMap.class ) ) );
    }//End Method
    
 }//End Class

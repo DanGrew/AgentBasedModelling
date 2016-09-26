@@ -58,8 +58,8 @@ public class EnvironmentPosition {
     * @param horizontalOffset the horizontal offset.
     * @return the {@link EnvironmentPosition} of this accounting for the offset.
     */
-   public EnvironmentPosition translate( int verticalOffset, int horizontalOffset ) {
-      return new EnvironmentPosition( vertical + verticalOffset, horizontal + horizontalOffset );
+   public EnvironmentPosition translate( Heading heading ) {
+      return new EnvironmentPosition( vertical + heading.verticalVelocity(), horizontal + heading.horizontalVelocity() );
    }//End Method
    
    /**

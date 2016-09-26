@@ -55,8 +55,8 @@ public class EnvironmentPositionTest {
    }//End Method
    
    @Test public void shouldProvideOffsetPosition(){
-      assertThat( systemUnderTest.translate( 10, 4 ), is( new EnvironmentPosition( X + 10, Y + 4 ) ) );
-      assertThat( systemUnderTest.translate( -6, -3 ), is( new EnvironmentPosition( X - 6, Y - 3 ) ) );
+      assertThat( systemUnderTest.translate( new Heading( 10, 4 ) ), is( new EnvironmentPosition( X + 10, Y + 4 ) ) );
+      assertThat( systemUnderTest.translate( new Heading( -6, -3 ) ), is( new EnvironmentPosition( X - 6, Y - 3 ) ) );
    }//End Method
 
 }//End Class
