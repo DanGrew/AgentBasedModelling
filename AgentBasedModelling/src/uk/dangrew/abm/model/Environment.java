@@ -157,6 +157,23 @@ public class Environment implements NeighbourHood {
    public boolean isSpace( EnvironmentPosition position ) {
       return element( position ) == EnvironmentElement.Space;
    }//End Method
+   
+   /**
+    * Method to determine whether the given {@link EnvironmentPosition} is available.
+    * @param environmentPosition the {@link EnvironmentPosition} in question.
+    * @return true if empty and can be occupied.
+    */
+   public boolean isAvailable( EnvironmentPosition environmentPosition ) {
+      if ( isBoundary( environmentPosition ) ) {
+         return false;
+      }
+      
+      if ( agents.containsKey( environmentPosition ) ) {
+         return false;
+      }
+      
+      return true;
+   }//End Method
 
    /**
     * Unmodifiable access to the grid.

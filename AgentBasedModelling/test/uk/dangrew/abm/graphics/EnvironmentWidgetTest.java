@@ -52,12 +52,12 @@ public class EnvironmentWidgetTest {
    
    @Test public void shouldRemoveColourFromOldPositionAndApplyColourAtNewPosition(){
       EnvironmentPosition initialPosition = new EnvironmentPosition( 5, 6 ); 
-      Agent agent = new AgentImpl( initialPosition, new Heading( 1, 1 ) );
+      Agent agent = new AgentImpl( initialPosition, new Heading( 10, 10 ) );
       environment.monitorAgent( agent );
       
-      assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.YELLOW ) );
+      assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.RED ) );
       agent.move( environment );
       assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.LIGHTGRAY ) );
-      assertThat( systemUnderTest.representationFor( new EnvironmentPosition( 6, 7 ) ).getFill(), is( Color.YELLOW ) );
+      assertThat( systemUnderTest.representationFor( new EnvironmentPosition( 6, 7 ) ).getFill(), is( Color.RED ) );
    }//End Method
 }//End Class

@@ -53,16 +53,16 @@ public class AgentImplTest {
    }//End Method
 
    @Test public void shouldNotChangeHeadingIfNotMovedIntoBoundary(){
-      when( interpolator.moveForVelocity( environment ) ).thenReturn( false );
+      when( interpolator.move( environment ) ).thenReturn( false );
       systemUnderTest.move( environment );
-      verify( interpolator ).moveForVelocity( environment );
+      verify( interpolator ).move( environment );
       verify( headingAdjuster, never() ).changeHeading();
    }//End Method
    
    @Test public void shouldChangeHeadingIfMovedIntoBoundary(){
-      when( interpolator.moveForVelocity( environment ) ).thenReturn( true );
+      when( interpolator.move( environment ) ).thenReturn( true );
       systemUnderTest.move( environment );
-      verify( interpolator ).moveForVelocity( environment );
+      verify( interpolator ).move( environment );
       verify( headingAdjuster ).changeHeading();
    }//End Method
    

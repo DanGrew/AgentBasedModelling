@@ -21,7 +21,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
-      this( new MovementInterpolator(), new HeadingAdjuster(), position, heading );
+      this( new FluidMovementInterpolator(), new HeadingAdjuster(), position, heading );
    }//End Constructor
    
    /**
@@ -78,7 +78,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     * {@inheritDoc}
     */
    @Override public void move( Environment environment ) {
-      if ( interpolator.moveForVelocity( environment ) ) {
+      if ( interpolator.move( environment ) ) {
          headingAdjuster.changeHeading();
       }
    }//End Method

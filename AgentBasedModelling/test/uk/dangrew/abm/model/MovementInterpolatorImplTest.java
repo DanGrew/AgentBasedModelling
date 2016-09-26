@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,22 +16,24 @@ import org.mockito.MockitoAnnotations;
 
 import javafx.beans.value.ChangeListener;
 
-public class MovementInterpolatorTest {
+public class MovementInterpolatorImplTest {
 
    @Mock private ChangeListener< EnvironmentPosition > positionListener;
    @Captor private ArgumentCaptor< EnvironmentPosition > positionCaptor;
    
    private ControllableAgent agent;
    @Mock private Environment environment;
-   private MovementInterpolator systemUnderTest;
+   private MovementInterpolatorImpl systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
    }//End Method
    
    private void constructSut( int row, int column, int vVelocity, int hVelocity ) {
+      when( environment.isAvailable( Mockito.any() ) ).thenReturn( true );
+      
       agent = new AgentImpl( new EnvironmentPosition( row, column ), new Heading( vVelocity, hVelocity ) );
-      systemUnderTest = new MovementInterpolator();
+      systemUnderTest = new MovementInterpolatorImpl();
       systemUnderTest.associate( agent );
    }//End Method
    
@@ -43,7 +46,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 4, 2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 9 ) );
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
@@ -58,7 +61,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 4, -2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 9 ) );
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
@@ -73,7 +76,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, -4, 2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 1 ) );
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
@@ -88,7 +91,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, -4, -2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 1 ) );
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
@@ -103,7 +106,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 4, 0 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 9 ) );
       assertThat( agent.position().get().horizontal(), is( 5 ) );
       
@@ -118,7 +121,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 0, 2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 5 ) );
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
@@ -131,7 +134,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 0, -2 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 5 ) );
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
@@ -144,7 +147,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, -4, 0 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 1 ) );
       assertThat( agent.position().get().horizontal(), is( 5 ) );
       
@@ -159,7 +162,7 @@ public class MovementInterpolatorTest {
       constructSut( 5, 5, 2, 4 );
       agent.position().addListener( positionListener );
       
-      systemUnderTest.moveForVelocity( environment );
+      systemUnderTest.move( environment );
       assertThat( agent.position().get().vertical(), is( 7 ) );
       assertThat( agent.position().get().horizontal(), is( 9 ) );
       

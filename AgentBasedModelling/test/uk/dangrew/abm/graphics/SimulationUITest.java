@@ -1,5 +1,8 @@
 package uk.dangrew.abm.graphics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +17,7 @@ import uk.dangrew.sd.graphics.launch.TestApplication;
 public class SimulationUITest {
 
    private Environment environment;
-   private Agent agent;
+   private List< Agent > agents;
    private SimulationUI systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
@@ -28,9 +31,13 @@ public class SimulationUITest {
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 50 ), 40 );
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 80 ), 40 );
       
-      agent = new AgentImpl( new EnvironmentPosition( 5, 5 ), new Heading( 8, 2 ) );
-      environment.monitorAgent( agent );
-      System.out.println( agent.position() );
+      agents = new ArrayList<>();
+      for ( int i = 0; i < 90; i++ ) {
+         Agent agent = new AgentImpl( new EnvironmentPosition( 1, 5 ), new Heading( 8, 2 ) );
+         agents.add( agent );
+         environment.monitorAgent( agent );
+         System.out.println( agent.position() );
+      }
       
       systemUnderTest = new SimulationUI( environment );
    }//End Method
@@ -40,10 +47,9 @@ public class SimulationUITest {
       TestApplication.launch( () -> systemUnderTest );
       
       while( true ) {
-         Thread.sleep( 500 );
+         Thread.sleep( 100 );
          
-         agent.move( environment );
-         System.out.println( agent.position() );
+         agents.forEach( a -> a.move( environment ) );
       }
    }//End Method
    

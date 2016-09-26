@@ -143,4 +143,19 @@ public class EnvironmentTest {
       assertThat( systemUnderTest.agents(), is( instanceOf( UnmodifiableObservableMap.class ) ) );
    }//End Method
    
+   @Test public void shouldNotShowPositionToBeAvailableWhenAgentPresent(){
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 3 ) ), is( true ) );
+      Agent agent = new AgentImpl( new EnvironmentPosition( 4, 3 ), new Heading( 10, 10 ) );
+      systemUnderTest.monitorAgent( agent );
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 3 ) ), is( false ) );
+      agent.move( systemUnderTest );
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 3 ) ), is( true ) );
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 5, 4 ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldNotShowPositionToBeAvailableWhenBoundaryPresent(){
+      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 5 );
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( -1, -1 ) ), is( false ) );
+      assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 0 ) ), is( false ) );
+   }//End Method
 }//End Class
