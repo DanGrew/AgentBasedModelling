@@ -14,6 +14,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    
    private final MovementInterpolator interpolator;
    private final HeadingAdjuster headingAdjuster;
+   private final NeighbourHood neighbourHood;
    
    /**
     * Constructs a new {@link AgentImpl}.
@@ -21,19 +22,21 @@ public class AgentImpl implements Agent, ControllableAgent {
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
-      this( new FluidMovementInterpolator(), new HeadingAdjuster(), position, heading );
+      this( new FluidMovementInterpolator(), new HeadingAdjuster(), new NeighbourHoodImpl(), position, heading );
    }//End Constructor
    
    /**
     * Constructs a new {@link AgentImpl}.
     * @param interpolator the {@link MovementInterpolator} for controlling movement.
     * @param headingAdjuster the {@link HeadingAdjuster} for controlling the {@link Heading}.
+    * @param neighbourHood the {@link NeighbourHood} for responding to.
     * @param position the {@link EnvironmentPosition} to start at.
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
    AgentImpl( 
             MovementInterpolator interpolator, 
             HeadingAdjuster headingAdjuster, 
+            NeighbourHood neighbourHood,
             EnvironmentPosition position, 
             Heading heading 
    ) {
@@ -44,6 +47,8 @@ public class AgentImpl implements Agent, ControllableAgent {
       this.interpolator.associate( this );
       this.headingAdjuster = headingAdjuster;
       this.headingAdjuster.associate( this );
+      this.neighbourHood = neighbourHood;
+      this.neighbourHood.associate( this );
    }//End Constructor
 
    /**
@@ -78,6 +83,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     * {@inheritDoc}
     */
    @Override public void move( Environment environment ) {
+      neighbourHood.respondToNeighbours( environment );
       if ( interpolator.move( environment ) ) {
          headingAdjuster.changeHeading();
       }

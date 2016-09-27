@@ -55,9 +55,9 @@ public class EnvironmentWidgetTest {
       Agent agent = new AgentImpl( initialPosition, new Heading( 10, 10 ) );
       environment.monitorAgent( agent );
       
-      assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.RED ) );
+      assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.BLUE ) );
       agent.move( environment );
       assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.LIGHTGRAY ) );
-      assertThat( systemUnderTest.representationFor( new EnvironmentPosition( 6, 7 ) ).getFill(), is( Color.RED ) );
+      assertThat( systemUnderTest.representationFor( new EnvironmentPosition( 6, 7 ) ).getFill(), is( Color.BLUE ) );
    }//End Method
 }//End Class

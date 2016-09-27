@@ -2,6 +2,7 @@ package uk.dangrew.abm.graphics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,22 +33,25 @@ public class SimulationUITest {
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 80 ), 40 );
       
       agents = new ArrayList<>();
-      for ( int i = 0; i < 90; i++ ) {
-         Agent agent = new AgentImpl( new EnvironmentPosition( 1, 5 ), new Heading( 8, 2 ) );
+      
+      systemUnderTest = new SimulationUI( environment );
+      
+      Random random = new Random();
+      for ( int i = 0; i < 100; i++ ) {
+         Agent agent = new AgentImpl( new EnvironmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( 8, 2 ) );
          agents.add( agent );
          environment.monitorAgent( agent );
          System.out.println( agent.position() );
       }
-      
-      systemUnderTest = new SimulationUI( environment );
    }//End Method
 
    @Ignore
    @Test public void manual() throws InterruptedException {
       TestApplication.launch( () -> systemUnderTest );
       
+      Thread.sleep( 2000 );
       while( true ) {
-         Thread.sleep( 100 );
+         Thread.sleep( 50 );
          
          agents.forEach( a -> a.move( environment ) );
       }

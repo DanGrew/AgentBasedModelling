@@ -8,7 +8,7 @@ import javafx.collections.ObservableMap;
 /**
  * The {@link Environment} represents a basic grid system that {@link Agent}s can move in.
  */
-public class Environment implements NeighbourHood {
+public class Environment {
 
    private final int width;
    private final int height;
@@ -199,11 +199,11 @@ public class Environment implements NeighbourHood {
       if ( agents.containsValue( agent ) ) {
          return;
       }
-      agents.put( agent.position().get(), agent );
       agent.position().addListener( ( s, o, u ) -> {
          agents.remove( o );
          agents.put( u, agent );
       } );
+      agents.put( agent.position().get(), agent );
    }//End Method
 
 }//End Class

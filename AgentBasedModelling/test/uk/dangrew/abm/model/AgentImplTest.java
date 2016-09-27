@@ -18,20 +18,27 @@ public class AgentImplTest {
    
    @Mock private MovementInterpolator interpolator;
    @Mock private HeadingAdjuster headingAdjuster;
+   @Mock private NeighbourHood neighbourHood;
    @Mock private Environment environment;
    private AgentImpl systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
-      systemUnderTest = new AgentImpl( interpolator, headingAdjuster, new EnvironmentPosition( 5, 7 ), new Heading( V_VELOCITY, H_VELOCITY ) );
+      systemUnderTest = new AgentImpl( 
+               interpolator, headingAdjuster, neighbourHood, new EnvironmentPosition( 5, 7 ), new Heading( V_VELOCITY, H_VELOCITY ) 
+      );
    }//End Method
    
-   @Test public void shouldAssociatedWithInterpolator(){
+   @Test public void shouldBeAssociatedWithInterpolator(){
       verify( interpolator ).associate( systemUnderTest );
    }//End Method
    
-   @Test public void shouldAssociatedWithHeadingAdjuster(){
+   @Test public void shouldBeAssociatedWithHeadingAdjuster(){
       verify( headingAdjuster ).associate( systemUnderTest );
+   }//End Method
+   
+   @Test public void shouldBeAssociatedWithNeighbourHood(){
+      verify( neighbourHood ).associate( systemUnderTest );
    }//End Method
 
    @Test public void shouldBeInInitialPosition() {
@@ -64,6 +71,11 @@ public class AgentImplTest {
       systemUnderTest.move( environment );
       verify( interpolator ).move( environment );
       verify( headingAdjuster ).changeHeading();
+   }//End Method
+   
+   @Test public void shouldUnconditionallyRespondToNeighbourHood(){
+      systemUnderTest.move( environment );
+      verify( neighbourHood ).respondToNeighbours( environment );
    }//End Method
    
 }//End Class

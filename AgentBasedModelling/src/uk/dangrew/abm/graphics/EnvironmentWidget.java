@@ -44,7 +44,7 @@ public class EnvironmentWidget extends GridPane {
          if ( change.wasRemoved() ) {
             representation.get( change.getKey() ).setFill( identifyColourFor( EnvironmentElement.Space ) );
          } else {
-            representation.get( change.getKey() ).setFill( Color.RED );
+            representation.get( change.getKey() ).setFill( Color.BLUE );
          }
       } );
    }//End Constructor

@@ -69,4 +69,11 @@ public class Heading {
       return true;
    }//End Method
    
+   /**
+    * {@inheritDoc}
+    */
+   @Override public String toString() {
+      return "Heading: v( " + verticalVelocity + "), h( " + horizontalVelocity + " )";
+   }//End Method
+   
 }//End Class
