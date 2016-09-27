@@ -1,4 +1,6 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
+
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 /**
  * The {@link ControllableAgent} provides a package level interface that allows compositie

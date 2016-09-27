@@ -1,4 +1,6 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
+
+import uk.dangrew.abm.model.environment.Environment;
 
 /**
  * Interface for the neighbourhood of an {@link Agent} in the {@link Environment}.

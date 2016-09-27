@@ -8,11 +8,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import uk.dangrew.abm.model.Agent;
-import uk.dangrew.abm.model.AgentImpl;
-import uk.dangrew.abm.model.Environment;
-import uk.dangrew.abm.model.EnvironmentPosition;
-import uk.dangrew.abm.model.Heading;
+import uk.dangrew.abm.model.agent.Agent;
+import uk.dangrew.abm.model.agent.AgentImpl;
+import uk.dangrew.abm.model.agent.Heading;
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 import uk.dangrew.sd.graphics.launch.TestApplication;
 
 public class SimulationUITest {

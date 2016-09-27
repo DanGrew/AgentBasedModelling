@@ -1,4 +1,4 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -10,6 +10,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import uk.dangrew.abm.model.agent.AgentImpl;
+import uk.dangrew.abm.model.agent.ControllableAgent;
+import uk.dangrew.abm.model.agent.FluidMovementInterpolator;
+import uk.dangrew.abm.model.agent.Heading;
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class FluidMovementInterpolatorTest {
 

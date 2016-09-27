@@ -9,10 +9,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import uk.dangrew.abm.model.Agent;
-import uk.dangrew.abm.model.Environment;
-import uk.dangrew.abm.model.EnvironmentElement;
-import uk.dangrew.abm.model.EnvironmentPosition;
+import uk.dangrew.abm.model.agent.Agent;
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentElement;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 /**
  * The {@link EnvironmentWidget} provides a graphical representation of an {@link Environment}.

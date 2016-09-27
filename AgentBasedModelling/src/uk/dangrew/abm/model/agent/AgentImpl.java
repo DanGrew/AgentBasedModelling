@@ -1,8 +1,10 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 /**
  * {@link Agent} implementation.

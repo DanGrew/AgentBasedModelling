@@ -1,4 +1,6 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.environment;
+
+import uk.dangrew.abm.model.agent.Heading;
 
 /**
  * The {@link EnvironmentPosition} represents a specific location in the {@link Environment}.

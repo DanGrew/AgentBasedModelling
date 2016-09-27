@@ -1,4 +1,4 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.environment;
 
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
@@ -10,6 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
+
+import uk.dangrew.abm.model.agent.Agent;
+import uk.dangrew.abm.model.agent.AgentImpl;
+import uk.dangrew.abm.model.agent.Heading;
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentElement;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class EnvironmentTest {
 

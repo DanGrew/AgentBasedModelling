@@ -1,9 +1,10 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.environment;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import uk.dangrew.abm.model.agent.Agent;
 
 /**
  * The {@link Environment} represents a basic grid system that {@link Agent}s can move in.

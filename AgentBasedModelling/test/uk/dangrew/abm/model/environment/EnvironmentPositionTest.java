@@ -1,4 +1,4 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.environment;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -6,6 +6,9 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import uk.dangrew.abm.model.agent.Heading;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class EnvironmentPositionTest {
 

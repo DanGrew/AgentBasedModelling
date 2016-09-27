@@ -1,4 +1,4 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
 
 /**
  * The {@link Heading} represents the velocity movement the {@link Agent} with attempt to make

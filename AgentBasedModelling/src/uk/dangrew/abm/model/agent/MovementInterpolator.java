@@ -1,4 +1,6 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
+
+import uk.dangrew.abm.model.environment.Environment;
 
 /**
  * The {@link MovementInterpolator} provides an interface for moving {@link Agent}s.

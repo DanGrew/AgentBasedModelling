@@ -1,4 +1,4 @@
-package uk.dangrew.abm.model;
+package uk.dangrew.abm.model.agent;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,6 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import uk.dangrew.abm.model.agent.ControllableAgent;
+import uk.dangrew.abm.model.agent.Heading;
+import uk.dangrew.abm.model.agent.HeadingAdjuster;
 
 public class HeadingAdjusterTest {
 
