@@ -19,6 +19,12 @@ import uk.dangrew.abm.model.environment.EnvironmentPosition;
  */
 public class EnvironmentWidget extends GridPane {
 
+   static final Color INFANT_COLOUR = Color.AQUA;
+   static final Color YOUTH_COLOUR = Color.CORNFLOWERBLUE;
+   static final Color ADULT_COLOUR = Color.BLUE;
+   static final Color ELDER_COLOUR = Color.BLUE.darker();
+   static final Color COMPLETE_COLOUR = Color.GRAY;
+   
    private final Environment environment;
    private final Map< EnvironmentPosition, Rectangle > representation;
    
@@ -44,7 +50,7 @@ public class EnvironmentWidget extends GridPane {
          if ( change.wasRemoved() ) {
             representation.get( change.getKey() ).setFill( identifyColourFor( EnvironmentElement.Space ) );
          } else {
-            representation.get( change.getKey() ).setFill( Color.BLUE );
+            representation.get( change.getKey() ).setFill( identifyColourFor( change.getValueAdded() ) );
          }
       } );
    }//End Constructor
@@ -59,7 +65,30 @@ public class EnvironmentWidget extends GridPane {
          case Boundary:
             return Color.BLACK;
          case Space:
-            return Color.LIGHTGRAY;
+            return Color.WHITE;
+         default:
+            return Color.RED;
+      }
+   }//End Method
+   
+   /**
+    * Method to identify the {@link Color} associated with the given {@link Agent}, according to its
+    * {@link AgeBracket}.
+    * @param agent the {@link Agent} in question.
+    * @return the {@link Color} associated.
+    */
+   Color identifyColourFor( Agent agent ) {
+      switch( agent.getAgeBracket() ) {
+         case Adult:
+            return ADULT_COLOUR;
+         case Complete:
+            return COMPLETE_COLOUR;
+         case Elder:
+            return ELDER_COLOUR;
+         case Infant:
+            return INFANT_COLOUR;
+         case Youth:
+            return YOUTH_COLOUR;
          default:
             return Color.RED;
       }

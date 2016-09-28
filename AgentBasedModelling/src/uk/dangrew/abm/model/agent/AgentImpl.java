@@ -13,10 +13,13 @@ public class AgentImpl implements Agent, ControllableAgent {
 
    private final ObjectProperty< Heading > heading;
    private final ObjectProperty< EnvironmentPosition > position;
+   private final ObjectProperty< Integer > age;
+   private final ObjectProperty< Integer > lifeExpectancy;
    
    private final MovementInterpolator interpolator;
    private final HeadingAdjuster headingAdjuster;
    private final NeighbourHood neighbourHood;
+   private final Lifecycle lifecycle;
    
    /**
     * Constructs a new {@link AgentImpl}.
@@ -24,7 +27,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
-      this( new FluidMovementInterpolator(), new HeadingAdjuster(), new NeighbourHoodImpl(), position, heading );
+      this( new FluidMovementInterpolator(), new HeadingAdjuster(), new NeighbourHoodImpl(), new Lifecycle(), position, heading );
    }//End Constructor
    
    /**
@@ -32,6 +35,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     * @param interpolator the {@link MovementInterpolator} for controlling movement.
     * @param headingAdjuster the {@link HeadingAdjuster} for controlling the {@link Heading}.
     * @param neighbourHood the {@link NeighbourHood} for responding to.
+    * @param lifecycle the {@link Lifecycle} of the {@link Agent}.
     * @param position the {@link EnvironmentPosition} to start at.
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
@@ -39,11 +43,14 @@ public class AgentImpl implements Agent, ControllableAgent {
             MovementInterpolator interpolator, 
             HeadingAdjuster headingAdjuster, 
             NeighbourHood neighbourHood,
+            Lifecycle lifecycle,
             EnvironmentPosition position, 
             Heading heading 
    ) {
       this.position = new SimpleObjectProperty<>( position );
       this.heading = new SimpleObjectProperty< Heading >( heading );
+      this.age = new SimpleObjectProperty<>();
+      this.lifeExpectancy = new SimpleObjectProperty<>();
       
       this.interpolator = interpolator;
       this.interpolator.associate( this );
@@ -51,6 +58,9 @@ public class AgentImpl implements Agent, ControllableAgent {
       this.headingAdjuster.associate( this );
       this.neighbourHood = neighbourHood;
       this.neighbourHood.associate( this );
+      this.lifecycle = lifecycle;
+      this.lifecycle.associate( this );
+      this.lifecycle.birth();
    }//End Constructor
 
    /**
@@ -84,7 +94,47 @@ public class AgentImpl implements Agent, ControllableAgent {
    /**
     * {@inheritDoc}
     */
+   @Override public ReadOnlyObjectProperty< Integer > age() {
+      return age;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public AgeBracket getAgeBracket() {
+      return lifecycle.getAgeBracket();
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setAge( int age ) {
+      this.age.set( age );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public ReadOnlyObjectProperty< Integer > lifeExpectancy() {
+      return lifeExpectancy;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setLifeExpectancy( int lifeExpectancy ) {
+      this.lifeExpectancy.set( lifeExpectancy );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
    @Override public void move( Environment environment ) {
+      lifecycle.age( environment );
+      
+      if ( getAgeBracket() == AgeBracket.Complete ) {
+         return;
+      }
       neighbourHood.respondToNeighbours( environment );
       if ( interpolator.move( environment ) ) {
          headingAdjuster.changeHeading();

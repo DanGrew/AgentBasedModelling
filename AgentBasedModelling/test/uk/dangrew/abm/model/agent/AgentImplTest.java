@@ -1,8 +1,11 @@
 package uk.dangrew.abm.model.agent;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,11 +14,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.abm.model.agent.AgentImpl;
-import uk.dangrew.abm.model.agent.Heading;
-import uk.dangrew.abm.model.agent.HeadingAdjuster;
-import uk.dangrew.abm.model.agent.MovementInterpolator;
-import uk.dangrew.abm.model.agent.NeighbourHood;
 import uk.dangrew.abm.model.environment.Environment;
 import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
@@ -27,13 +25,15 @@ public class AgentImplTest {
    @Mock private MovementInterpolator interpolator;
    @Mock private HeadingAdjuster headingAdjuster;
    @Mock private NeighbourHood neighbourHood;
+   @Mock private Lifecycle lifecyle;
    @Mock private Environment environment;
    private AgentImpl systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
       systemUnderTest = new AgentImpl( 
-               interpolator, headingAdjuster, neighbourHood, new EnvironmentPosition( 5, 7 ), new Heading( V_VELOCITY, H_VELOCITY ) 
+               interpolator, headingAdjuster, neighbourHood, lifecyle, 
+               new EnvironmentPosition( 5, 7 ), new Heading( V_VELOCITY, H_VELOCITY ) 
       );
    }//End Method
    
@@ -86,4 +86,47 @@ public class AgentImplTest {
       verify( neighbourHood ).respondToNeighbours( environment );
    }//End Method
    
+   @Test public void shouldProvideAge(){
+      assertThat( systemUnderTest.age().get(), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldSetAge(){
+      assertThat( systemUnderTest.age().get(), is( nullValue() ) );
+      systemUnderTest.setAge( 29 );
+      assertThat( systemUnderTest.age().get(), is( 29 ) );
+   }//End Method
+   
+   @Test public void shouldProvideLifeExpectancy(){
+      assertThat( systemUnderTest.lifeExpectancy().get(), is( not( 0 ) ) );
+   }//End Method
+   
+   @Test public void shouldSetLifeExpectancy(){
+      systemUnderTest.setLifeExpectancy( 29 );
+      assertThat( systemUnderTest.lifeExpectancy().get(), is( 29 ) );
+   }//End Method
+   
+   @Test public void shouldBeBornUsingLifecyle(){
+      verify( lifecyle ).birth();
+   }//End Method
+   
+   @Test public void shouldAgeWithEachMove(){
+      systemUnderTest.move( environment );
+      verify( lifecyle ).age( environment );
+      
+      systemUnderTest.move( environment );
+      verify( lifecyle, times( 2 ) ).age( environment );
+   }//End Method
+   
+   @Test public void shouldProvideAgeBracket(){
+      when( lifecyle.getAgeBracket() ).thenReturn( AgeBracket.Youth );
+      assertThat( systemUnderTest.getAgeBracket(), is( AgeBracket.Youth ) );
+      verify( lifecyle ).getAgeBracket();
+   }//End Method
+   
+   @Test public void shouldNotMoveIfComplete(){
+      when( lifecyle.getAgeBracket() ).thenReturn( AgeBracket.Complete );
+      systemUnderTest.move( environment );
+      verify( neighbourHood, never() ).respondToNeighbours( environment );
+      verify( interpolator, never() ).move( environment );
+   }//End Method
 }//End Class

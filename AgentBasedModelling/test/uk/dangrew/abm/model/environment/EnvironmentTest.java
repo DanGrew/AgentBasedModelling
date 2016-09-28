@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -14,9 +15,6 @@ import com.sun.javafx.collections.UnmodifiableObservableMap;
 import uk.dangrew.abm.model.agent.Agent;
 import uk.dangrew.abm.model.agent.AgentImpl;
 import uk.dangrew.abm.model.agent.Heading;
-import uk.dangrew.abm.model.environment.Environment;
-import uk.dangrew.abm.model.environment.EnvironmentElement;
-import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class EnvironmentTest {
 
@@ -164,5 +162,21 @@ public class EnvironmentTest {
       systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 5 );
       assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( -1, -1 ) ), is( false ) );
       assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 0 ) ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldIgnoreCleanUpWhenAgentNotPresent(){
+      Agent agent = new AgentImpl( new EnvironmentPosition( 4, 3 ), new Heading( 10, 10 ) );
+      systemUnderTest.cleanAgentUp( agent );
+   }//End Method
+   
+   @Test public void shouldRemoveAgentAndNoLongerListenForChangesWhenCleanedUp(){
+      Agent agent = new AgentImpl( new EnvironmentPosition( 4, 3 ), new Heading( 10, 10 ) );
+      systemUnderTest.monitorAgent( agent );
+      systemUnderTest.cleanAgentUp( agent );
+      assertThat( systemUnderTest.agents().get( agent.position().get() ), is( nullValue() ) );
+      assertThat( systemUnderTest.grid().get( agent.position().get() ), is( EnvironmentElement.Space ) );
+      agent.move( systemUnderTest );
+      assertThat( systemUnderTest.agents().get( agent.position().get() ), is( nullValue() ) );
+      assertThat( systemUnderTest.grid().get( agent.position().get() ), is( EnvironmentElement.Space ) );
    }//End Method
 }//End Class

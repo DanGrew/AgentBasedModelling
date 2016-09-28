@@ -27,6 +27,8 @@ public class SimulationUITest {
       environment = new Environment( 100, 100 );
       environment.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 100 );
       environment.applyHorizontalBoundary( new EnvironmentPosition( 99, 0 ), 100 );
+      environment.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 100 );
+      environment.applyVerticalBoundary( new EnvironmentPosition( 0, 99 ), 100 );
       
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 20 ), 40 );
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 50 ), 40 );

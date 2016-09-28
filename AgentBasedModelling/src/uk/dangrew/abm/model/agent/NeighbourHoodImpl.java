@@ -12,7 +12,7 @@ import uk.dangrew.abm.model.environment.EnvironmentPosition;
 class NeighbourHoodImpl implements NeighbourHood {
    
    private static final int IMMEDIATE_NEIGHBOURHOOD_DISTANCE = 2;
-   private static final int IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH = 10;
+   private static final int IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH = 7;
 
    private ControllableAgent subjectAgent;
    

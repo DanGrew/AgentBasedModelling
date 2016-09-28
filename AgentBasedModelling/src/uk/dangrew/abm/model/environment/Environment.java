@@ -1,7 +1,11 @@
 package uk.dangrew.abm.model.environment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import uk.dangrew.abm.model.agent.Agent;
@@ -16,6 +20,7 @@ public class Environment {
    private final ObservableMap< EnvironmentPosition, EnvironmentElement > environment;
    private final UnmodifiableObservableMap< EnvironmentPosition, EnvironmentElement > unmodifiableEnvironment;
    private final ObservableMap< EnvironmentPosition, Agent > agents;
+   private final Map< Agent, ChangeListener< EnvironmentPosition > > agentListeners;
    private final UnmodifiableObservableMap< EnvironmentPosition, Agent > unmodifiableAgents;
    
    /**
@@ -39,6 +44,7 @@ public class Environment {
       }
       
       this.agents = FXCollections.observableHashMap();
+      this.agentListeners = new HashMap<>();
       this.unmodifiableAgents = new UnmodifiableObservableMap<>( agents );
    }//End Constructor
    
@@ -200,11 +206,26 @@ public class Environment {
       if ( agents.containsValue( agent ) ) {
          return;
       }
-      agent.position().addListener( ( s, o, u ) -> {
+      ChangeListener< EnvironmentPosition > listener = ( s, o, u ) -> {
          agents.remove( o );
          agents.put( u, agent );
-      } );
+      };
+      agentListeners.put( agent, listener );
+      agent.position().addListener( listener );
       agents.put( agent.position().get(), agent );
+   }//End Method
+
+   /**
+    * Method to clean up an {@link Agent} that has expired.
+    * @param agent the {@link Agent} to clean up.
+    */
+   public void cleanAgentUp( Agent agent ) {
+      if ( !agents.containsValue( agent ) ) {
+         return;
+      }
+      agent.position().removeListener( agentListeners.remove( agent ) );
+      EnvironmentPosition currentPosition = agent.position().get();
+      agents.remove( currentPosition );
    }//End Method
 
 }//End Class

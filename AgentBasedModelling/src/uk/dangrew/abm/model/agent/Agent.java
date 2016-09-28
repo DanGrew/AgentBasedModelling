@@ -20,6 +20,24 @@ public interface Agent {
     * @return the {@link Heading}.
     */
    public ReadOnlyObjectProperty< Heading > heading();
+   
+   /**
+    * Access to the age of the {@link Agent}.
+    * @return the age.
+    */
+   public ReadOnlyObjectProperty< Integer > age();
+   
+   /**
+    * Method to get the {@link AgeBracket} of the {@link Agent}.
+    * @return the {@link AgeBracket} according to the age. 
+    */
+   public AgeBracket getAgeBracket();
+   
+   /**
+    * Access to the life expectancy of the {@link Agent}.
+    * @return the life expectancy.
+    */
+   public ReadOnlyObjectProperty< Integer > lifeExpectancy();
 
    /**
     * Method to move the {@link Agent} according to their current prerogative.
