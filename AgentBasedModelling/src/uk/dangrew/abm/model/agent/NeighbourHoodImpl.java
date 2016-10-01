@@ -1,8 +1,7 @@
 package uk.dangrew.abm.model.agent;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import uk.dangrew.abm.model.environment.Environment;
 import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
@@ -15,8 +14,16 @@ class NeighbourHoodImpl implements NeighbourHood {
    private static final int IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH = 7;
 
    private ControllableAgent subjectAgent;
+   private final ObservableList< Agent > neighbours;
+   private final ObservableList< Agent > unmodifiableNeighbours;
    
-   NeighbourHoodImpl() {}//End Constructor
+   /**
+    * Constructs a new {@link NeighbourHoodImpl}.
+    */
+   NeighbourHoodImpl() {
+      this.neighbours = FXCollections.observableArrayList();
+      this.unmodifiableNeighbours = FXCollections.unmodifiableObservableList( this.neighbours );
+   }//End Constructor
    
    /**
     * {@inheritDoc}
@@ -27,17 +34,25 @@ class NeighbourHoodImpl implements NeighbourHood {
       }
       this.subjectAgent = agent;
    }//End Method
-
+   
    /**
     * {@inheritDoc}
     */
-   @Override public boolean respondToNeighbours( Environment environment ) {
+   @Override public ObservableList< Agent > neighbours() {
+      return unmodifiableNeighbours;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void identifyNeighbourHood( Environment environment ) {
+      neighbours.clear();
+      
       EnvironmentPosition topLeftOfNeighbourhood = subjectAgent.position().get().translate( 
                new Heading( -IMMEDIATE_NEIGHBOURHOOD_DISTANCE, -IMMEDIATE_NEIGHBOURHOOD_DISTANCE ) 
       );
-
+      
       final int vProgress = topLeftOfNeighbourhood.vertical();
-      final List< Agent > agentsInImmediate = new ArrayList<>();
       
       for ( int v = vProgress; v < vProgress + IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH; v++ ) {
          final int hProgress = topLeftOfNeighbourhood.horizontal();
@@ -47,23 +62,28 @@ class NeighbourHoodImpl implements NeighbourHood {
                continue;
             }
             if ( neighbour != null ) {
-               agentsInImmediate.add( neighbour );
+               neighbours.add( neighbour );
             }
          }         
       }
-      
-      if ( agentsInImmediate.isEmpty() ) {
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public boolean respondToNeighbours() {
+      if ( neighbours.isEmpty() ) {
          return false;
       }
       
       double averageH = 0.0;
       double averageV = 0.0;
-      for( Agent agent : agentsInImmediate ) {
+      for( Agent agent : neighbours ) {
          averageH += agent.heading().get().horizontalVelocity();
          averageV += agent.heading().get().verticalVelocity();
       }
-      averageH /= agentsInImmediate.size();
-      averageV /= agentsInImmediate.size();
+      averageH /= neighbours.size();
+      averageV /= neighbours.size();
       
       int headingH = ( int )Math.round( averageH );
       int headingV = ( int )Math.round( averageV );

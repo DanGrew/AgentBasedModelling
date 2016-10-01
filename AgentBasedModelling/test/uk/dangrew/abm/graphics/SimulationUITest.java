@@ -1,7 +1,7 @@
 package uk.dangrew.abm.graphics;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Random;
 
 import org.junit.Before;
@@ -18,7 +18,6 @@ import uk.dangrew.sd.graphics.launch.TestApplication;
 public class SimulationUITest {
 
    private Environment environment;
-   private List< Agent > agents;
    private SimulationUI systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
@@ -34,14 +33,12 @@ public class SimulationUITest {
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 50 ), 40 );
       environment.applyVerticalBoundary( new EnvironmentPosition( 30, 80 ), 40 );
       
-      agents = new ArrayList<>();
       
       systemUnderTest = new SimulationUI( environment );
       
       Random random = new Random();
       for ( int i = 0; i < 100; i++ ) {
          Agent agent = new AgentImpl( new EnvironmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( 8, 2 ) );
-         agents.add( agent );
          environment.monitorAgent( agent );
          System.out.println( agent.position() );
       }
@@ -55,6 +52,7 @@ public class SimulationUITest {
       while( true ) {
          Thread.sleep( 50 );
          
+         Collection< Agent > agents = new ArrayList<>( environment.agents().values() );
          agents.forEach( a -> a.move( environment ) );
       }
    }//End Method

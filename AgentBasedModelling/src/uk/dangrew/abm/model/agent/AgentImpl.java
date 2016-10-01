@@ -15,11 +15,14 @@ public class AgentImpl implements Agent, ControllableAgent {
    private final ObjectProperty< EnvironmentPosition > position;
    private final ObjectProperty< Integer > age;
    private final ObjectProperty< Integer > lifeExpectancy;
+   private Gender gender;
+   private int reproductiveDrive;
    
    private final MovementInterpolator interpolator;
    private final HeadingAdjuster headingAdjuster;
    private final NeighbourHood neighbourHood;
    private final Lifecycle lifecycle;
+   private ParentHood parentHood;
    
    /**
     * Constructs a new {@link AgentImpl}.
@@ -27,7 +30,13 @@ public class AgentImpl implements Agent, ControllableAgent {
     * @param heading the initial {@link Heading} of the {@link Agent}.
     */
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
-      this( new FluidMovementInterpolator(), new HeadingAdjuster(), new NeighbourHoodImpl(), new Lifecycle(), position, heading );
+      this( 
+               new FluidMovementInterpolator(), 
+               new HeadingAdjuster(), 
+               new NeighbourHoodImpl(), 
+               new Lifecycle(),
+               position, heading 
+      );
    }//End Constructor
    
    /**
@@ -129,13 +138,52 @@ public class AgentImpl implements Agent, ControllableAgent {
    /**
     * {@inheritDoc}
     */
+   @Override public Gender gender() {
+      return gender;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public int matingCycle() {
+      return reproductiveDrive;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setMatingCycle( int drive ) {
+      this.reproductiveDrive = drive;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setGender( Gender gender, ParentHood parentHood ) {
+      this.gender = gender;
+      this.parentHood = parentHood;
+      this.parentHood.associate( this, neighbourHood );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void mate( Agent agent ) {
+      parentHood.mate( agent );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
    @Override public void move( Environment environment ) {
       lifecycle.age( environment );
       
       if ( getAgeBracket() == AgeBracket.Complete ) {
          return;
       }
-      neighbourHood.respondToNeighbours( environment );
+      neighbourHood.identifyNeighbourHood( environment );
+      neighbourHood.respondToNeighbours();
+      parentHood.mingle( environment );
       if ( interpolator.move( environment ) ) {
          headingAdjuster.changeHeading();
       }

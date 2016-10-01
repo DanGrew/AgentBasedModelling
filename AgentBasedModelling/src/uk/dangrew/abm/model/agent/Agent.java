@@ -38,11 +38,29 @@ public interface Agent {
     * @return the life expectancy.
     */
    public ReadOnlyObjectProperty< Integer > lifeExpectancy();
+   
+   /**
+    * Access to the {@link Gender} of the {@link Agent}.
+    * @return the {@link Gender}.
+    */
+   public Gender gender();
+   
+   /**
+    * Access to the mating cycle of the {@link Agent}.
+    * @return the time between each mating attempt.
+    */
+   public int matingCycle();
 
    /**
     * Method to move the {@link Agent} according to their current prerogative.
     * @param environment the {@link Environment} to move in.
     */
    public void move( Environment environment );
+
+   /**
+    * Method to mate with this {@link Agent}.
+    * @param agent the {@link Agent} wishing to mate this with this.
+    */
+   public void mate( Agent agent );
 
 }//End Interface

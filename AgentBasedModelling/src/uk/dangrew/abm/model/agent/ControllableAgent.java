@@ -31,4 +31,17 @@ interface ControllableAgent extends Agent {
     * @param lifeExpectancy the life expectancy to set.
     */
    public void setLifeExpectancy( int lifeExpectancy );
+   
+   /**
+    * Method to set the {@link Gender} of the {@link Agent}. 
+    * @param gender the {@link Gender}.
+    * @param parentHood the {@link ParentHood} behaviour associated with the {@link Gender}.
+    */
+   public void setGender( Gender gender, ParentHood parentHood );
+   
+   /**
+    * Method to set the mating drive of the {@link Agent}.
+    * @param drive the frequency to mate.
+    */
+   public void setMatingCycle( int drive );
 }//End Interface

@@ -3,12 +3,15 @@ package uk.dangrew.abm.model.agent;
 import java.util.Random;
 
 import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 /**
  * The {@link Lifecycle} provides a mechanism for tracking and controlling the age of an {@link Agent}.
  */
 class Lifecycle {
 
+   static final int STATIONARY_LIMIT = 50;
+   static final int MAXIMUM_MATING_CYCLE = 30;
    static final int BASE_AGE = 1000;
    static final int MAX_AGE_BOOST = BASE_AGE / 4;
    static final int YOUTH_COME_OF_AGE = BASE_AGE / 5;
@@ -18,6 +21,9 @@ class Lifecycle {
    
    private final Random random;
    private ControllableAgent agent;
+   
+   private EnvironmentPosition previousPosition;
+   private int inPlaceFor;
    
    /**
     * Constructs a new {@link Lifecycle}.
@@ -32,6 +38,8 @@ class Lifecycle {
     */
    Lifecycle( Random randomizer ) {
       this.random = randomizer;
+      this.inPlaceFor = 0;
+      this.previousPosition = null;
    }//End Constructor
 
    /**
@@ -51,6 +59,16 @@ class Lifecycle {
    public void birth() {
       agent.setLifeExpectancy( BASE_AGE + random.nextInt( MAX_AGE_BOOST ) );
       agent.setAge( 0 );
+      
+      boolean male = random.nextBoolean();
+      if ( male ) {
+         agent.setGender( Gender.Male, new MaleParentHood() );
+      } else {
+         agent.setGender( Gender.Female, new FemaleParentHood() );
+      }
+      
+      int matingCycle = random.nextInt( MAXIMUM_MATING_CYCLE );
+      agent.setMatingCycle( matingCycle );
    }//End Method
 
    /**
@@ -65,6 +83,21 @@ class Lifecycle {
       }
       
       agent.setAge( age + 1 );
+      
+      if ( previousPosition == null ) {
+         previousPosition = agent.position().get();
+         return;
+      }
+      
+      if ( previousPosition.equals( agent.position().get() ) ) {
+         inPlaceFor++;
+      } else {
+         inPlaceFor = 0;
+      }
+      
+      if ( inPlaceFor > STATIONARY_LIMIT ) {
+         agent.setAge( Math.max( agent.lifeExpectancy().get(), agent.age().get() ) );
+      }
    }//End Method
 
    /**

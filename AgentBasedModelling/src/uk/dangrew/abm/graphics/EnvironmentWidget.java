@@ -19,10 +19,16 @@ import uk.dangrew.abm.model.environment.EnvironmentPosition;
  */
 public class EnvironmentWidget extends GridPane {
 
-   static final Color INFANT_COLOUR = Color.AQUA;
-   static final Color YOUTH_COLOUR = Color.CORNFLOWERBLUE;
-   static final Color ADULT_COLOUR = Color.BLUE;
-   static final Color ELDER_COLOUR = Color.BLUE.darker();
+   static final Color MALE_INFANT_COLOUR = Color.AQUA;
+   static final Color MALE_YOUTH_COLOUR = Color.CORNFLOWERBLUE;
+   static final Color MALE_ADULT_COLOUR = Color.BLUE;
+   static final Color MALE_ELDER_COLOUR = Color.BLUE.darker();
+   
+   static final Color FEMALE_INFANT_COLOUR = Color.PINK;
+   static final Color FEMALE_YOUTH_COLOUR = Color.PALEVIOLETRED;
+   static final Color FEMALE_ADULT_COLOUR = Color.RED;
+   static final Color FEMALE_ELDER_COLOUR = Color.RED.darker();
+   
    static final Color COMPLETE_COLOUR = Color.GRAY;
    
    private final Environment environment;
@@ -78,19 +84,39 @@ public class EnvironmentWidget extends GridPane {
     * @return the {@link Color} associated.
     */
    Color identifyColourFor( Agent agent ) {
-      switch( agent.getAgeBracket() ) {
-         case Adult:
-            return ADULT_COLOUR;
-         case Complete:
-            return COMPLETE_COLOUR;
-         case Elder:
-            return ELDER_COLOUR;
-         case Infant:
-            return INFANT_COLOUR;
-         case Youth:
-            return YOUTH_COLOUR;
+      switch( agent.gender() ) {
+         case Male:
+            switch( agent.getAgeBracket() ) {
+               case Adult:
+                  return MALE_ADULT_COLOUR;
+               case Complete:
+                  return COMPLETE_COLOUR;
+               case Elder:
+                  return MALE_ELDER_COLOUR;
+               case Infant:
+                  return MALE_INFANT_COLOUR;
+               case Youth:
+                  return MALE_YOUTH_COLOUR;
+               default:
+                  return Color.GREEN;
+            }
+         case Female:
+            switch( agent.getAgeBracket() ) {
+               case Adult:
+                  return FEMALE_ADULT_COLOUR;
+               case Complete:
+                  return COMPLETE_COLOUR;
+               case Elder:
+                  return FEMALE_ELDER_COLOUR;
+               case Infant:
+                  return FEMALE_INFANT_COLOUR;
+               case Youth:
+                  return FEMALE_YOUTH_COLOUR;
+               default:
+                  return Color.GREEN;
+            }
          default:
-            return Color.RED;
+            return Color.GREEN;
       }
    }//End Method
    

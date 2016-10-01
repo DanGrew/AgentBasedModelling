@@ -1,7 +1,10 @@
 package uk.dangrew.abm.model.agent;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +14,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.abm.model.environment.Environment;
@@ -85,4 +89,62 @@ public class LifecycleTest {
       assertThat( systemUnderTest.getAgeBracket(), is( AgeBracket.Elder ) );
    }//End Method
 
+   @Test public void shouldDecideMaleAndMaleParentHood(){
+      when( randomizer.nextBoolean() ).thenReturn( true );
+      
+      ControllableAgent agent = mock( ControllableAgent.class );
+      systemUnderTest = new Lifecycle( randomizer );
+      systemUnderTest.associate( agent );
+      
+      systemUnderTest.birth();
+      verify( agent ).setGender( Mockito.eq( Gender.Male ), Mockito.isA( MaleParentHood.class ) );
+   }//End Method
+   
+   @Test public void shouldDecideFemaleAndFemaleParentHood(){
+      when( randomizer.nextBoolean() ).thenReturn( false );
+      
+      ControllableAgent agent = mock( ControllableAgent.class );
+      systemUnderTest = new Lifecycle( randomizer );
+      systemUnderTest.associate( agent );
+      
+      systemUnderTest.birth();
+      verify( agent ).setGender( Mockito.eq( Gender.Female ), Mockito.isA( FemaleParentHood.class ) );
+   }//End Method
+   
+   @Test public void shouldRandomizeMatingCycle(){
+      when( randomizer.nextInt( Lifecycle.MAXIMUM_MATING_CYCLE ) ).thenReturn( 13 );
+      systemUnderTest.birth();
+      assertThat( agent.matingCycle(), is( 13 ) );
+   }//End Method
+   
+   @Test public void shouldDieIfStoppedInPlaceForTooLong(){
+      systemUnderTest.age( environment );
+      for( int i = 0; i < Lifecycle.STATIONARY_LIMIT + 1; i++ ) {
+         systemUnderTest.age( environment );
+      }
+      assertThat( agent.age().get(), is( agent.lifeExpectancy().get() ) );
+   }//End Method
+   
+   @Test public void shouldNotDieIfMovingAround(){
+      systemUnderTest.age( environment );
+      for( int i = 0; i < Lifecycle.STATIONARY_LIMIT; i++ ) {
+         systemUnderTest.age( environment );
+      }
+      agent.setPosition( new EnvironmentPosition( 100, 100 ) );
+      systemUnderTest.age( environment );
+      assertThat( agent.age().get(), is( greaterThan( Lifecycle.STATIONARY_LIMIT ) ) );
+   }//End Method
+   
+   @Test public void shouldBeCleanedUpAfterStationary(){
+      systemUnderTest.age( environment );
+      for( int i = 0; i < Lifecycle.STATIONARY_LIMIT + 1; i++ ) {
+         systemUnderTest.age( environment );
+      }
+      for( int i = 0; i < Lifecycle.REMOVE_FROM_ENVIRONMENT_AFTER + 1; i++ ) {
+         systemUnderTest.age( environment );
+      }
+      assertThat( agent.age().get(), is( agent.lifeExpectancy().get() + Lifecycle.REMOVE_FROM_ENVIRONMENT_AFTER ) );
+      verify( environment ).cleanAgentUp( agent );
+   }//End Method
+   
 }//End Class

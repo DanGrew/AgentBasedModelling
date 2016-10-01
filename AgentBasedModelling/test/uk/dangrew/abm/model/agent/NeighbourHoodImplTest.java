@@ -1,15 +1,12 @@
 package uk.dangrew.abm.model.agent;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.dangrew.abm.model.agent.AgentImpl;
-import uk.dangrew.abm.model.agent.ControllableAgent;
-import uk.dangrew.abm.model.agent.Heading;
-import uk.dangrew.abm.model.agent.NeighbourHoodImpl;
 import uk.dangrew.abm.model.environment.Environment;
 import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
@@ -50,7 +47,8 @@ public class NeighbourHoodImplTest {
       agent1.setPosition( new EnvironmentPosition( 6, 6 ) );
       agent1.setHeading( new Heading( -10, -10 ) );
       
-      assertThat( systemUnderTest.respondToNeighbours( environment ), is( true ) );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.respondToNeighbours(), is( true ) );
       assertThat( subjectAgent.heading().get(), is( agent1.heading().get() ) );
    }//End Method
    
@@ -62,12 +60,33 @@ public class NeighbourHoodImplTest {
       agent3.setPosition( new EnvironmentPosition( 3, 7 ) );
       agent3.setHeading( new Heading( -6, -3 ) );
       
-      assertThat( systemUnderTest.respondToNeighbours( environment ), is( true ) );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.respondToNeighbours(), is( true ) );
       assertThat( subjectAgent.heading().get(), is( new Heading( -8, -2 ) ) );
    }//End Method
    
+   @Test public void shouldIdentifyAllAgentsInNeighbourHood() {
+      agent1.setPosition( new EnvironmentPosition( 6, 6 ) );
+      agent2.setPosition( new EnvironmentPosition( 7, 3 ) );
+      agent3.setPosition( new EnvironmentPosition( 3, 7 ) );
+      
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.neighbours(), containsInAnyOrder( agent1, agent2, agent3 ) );
+   }//End Method
+   
+   @Test public void shouldClearAgentsOutEachIdentifyProcess(){
+      agent1.setPosition( new EnvironmentPosition( 6, 6 ) );
+      agent2.setPosition( new EnvironmentPosition( 7, 3 ) );
+      agent3.setPosition( new EnvironmentPosition( 3, 7 ) );
+      
+      systemUnderTest.identifyNeighbourHood( environment );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.neighbours(), containsInAnyOrder( agent1, agent2, agent3 ) );
+   }//End Method
+   
    @Test public void shouldNotRespondToNeighboursIfNotCloseEnough(){
-      assertThat( systemUnderTest.respondToNeighbours( environment ), is( false ) );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
    }//End Method
    
    @Test public void shouldHeadTowardsThoseInOutsideNeighbourhood() {
@@ -78,7 +97,8 @@ public class NeighbourHoodImplTest {
       agent1.setPosition( new EnvironmentPosition( 6, 6 ) );
       agent1.setHeading( new Heading( 10, 10 ) );
       
-      assertThat( systemUnderTest.respondToNeighbours( environment ), is( false ) );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
       assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
    }//End Method
    
@@ -90,7 +110,8 @@ public class NeighbourHoodImplTest {
       agent3.setPosition( new EnvironmentPosition( 3, 7 ) );
       agent3.setHeading( new Heading( 0, 0 ) );
       
-      assertThat( systemUnderTest.respondToNeighbours( environment ), is( false ) );
+      systemUnderTest.identifyNeighbourHood( environment );
+      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
       assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
    }//End Method
 

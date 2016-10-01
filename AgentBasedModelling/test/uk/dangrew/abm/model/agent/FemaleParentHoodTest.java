@@ -1,0 +1,177 @@
+package uk.dangrew.abm.model.agent;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Random;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import uk.dangrew.abm.model.environment.Environment;
+import uk.dangrew.abm.model.environment.EnvironmentPosition;
+
+public class FemaleParentHoodTest {
+
+   @Captor ArgumentCaptor< Agent > agentCaptor;
+   @Mock private Agent maleNeighbour;
+   @Mock private Agent femaleNeighbour;
+   
+   @Mock private Random random;
+   private ControllableAgent agent;
+   @Mock private Environment environment;
+   @Mock private NeighbourHood neighbourHood;
+   private FemaleParentHood systemUnderTest;
+
+   @Before public void initialiseSystemUnderTest() {
+      MockitoAnnotations.initMocks( this );
+      when( maleNeighbour.gender() ).thenReturn( Gender.Male );
+      when( maleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Adult );
+      when( femaleNeighbour.gender() ).thenReturn( Gender.Female );
+      when( femaleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Adult );
+      when( environment.isAvailable( Mockito.any() ) ).thenReturn( true );
+      
+      agent = new AgentImpl( new EnvironmentPosition( 0, 0 ), new Heading( 10, 10 ) );
+      agent.setAge( agent.lifeExpectancy().get() - 1 );
+      systemUnderTest = new FemaleParentHood( random );
+      systemUnderTest.associate( agent, neighbourHood );
+   }//End Method
+
+   @Test( expected = IllegalStateException.class ) public void shouldNotAllowMultipleAssociations() {
+      systemUnderTest.associate( agent, neighbourHood );
+   }//End Method
+   
+   @Test public void shouldHaveOffspringAfterPregnancy(){
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+      for ( int i = 0; i < FemaleParentHood.PREGNANCY_PERIOD; i++ ) {
+         systemUnderTest.mingle( environment );
+      }
+      
+      verify( environment, never() ).monitorAgent( Mockito.any() );
+      systemUnderTest.mingle( environment );
+      verify( environment ).monitorAgent( agentCaptor.capture() );
+      
+      assertThat( agentCaptor.getValue().position().get(), is( agent.position().get().translate( new Heading( -1, -1 ) ) ) );
+      assertThat( agentCaptor.getValue().heading().get(), is( agent.heading().get() ) );
+      
+      systemUnderTest.mingle( environment );
+      verify( environment, times( 1 ) ).monitorAgent( Mockito.any() );
+   }//End Method
+   
+   @Test public void shouldNotMateWithMoreThanOneAtOnce(){
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+      Agent anotherMale = mock( Agent.class );
+      when( anotherMale.gender() ).thenReturn( Gender.Male );
+      assertThat( systemUnderTest.mate( anotherMale ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldOnlyMateGivenChance(){
+      when( random.nextInt( FemaleParentHood.MATING_DENOMINATOR ) ).thenReturn( 30 );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+   }//End Method
+   
+   @Test public void shouldNotMateIfNotGivenChance(){
+      when( random.nextInt( FemaleParentHood.MATING_DENOMINATOR ) ).thenReturn( 50 );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldOnlyReproduceAfterCertainAge(){
+      agent.setAge( 0 );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+      for ( int i = 0; i < FemaleParentHood.PREGNANCY_PERIOD * 2; i++ ) {
+         systemUnderTest.mingle( environment );
+      }
+      
+      verify( environment, never() ).monitorAgent( Mockito.any() );
+   }//End Method
+   
+   @Test public void shouldIgnoreMatingFemale(){
+      assertThat( systemUnderTest.mate( femaleNeighbour ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldNotMateWithAgentWhoIsntOldEnough(){
+      when( maleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Infant );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+   }//End Method
+   
+   @Test public void shouldWaitRecoveryPeriodBeforeMatingAgain(){
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+      for ( int i = 0; i < FemaleParentHood.PREGNANCY_PERIOD; i++ ) {
+         systemUnderTest.mingle( environment );
+      }
+      systemUnderTest.mingle( environment );
+      verify( environment ).monitorAgent( agentCaptor.capture() );
+      
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+      for ( int i = 0; i < FemaleParentHood.PREGNANCY_RECOVERY - 1; i++ ) {
+         systemUnderTest.mingle( environment );
+      }
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+      systemUnderTest.mingle( environment );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+   }//End Method
+   
+   @Test public void shouldCheckAntiClockwiseAroundAgentForOffspringPosition(){
+      EnvironmentPosition position = new EnvironmentPosition( 5, 5 );
+      
+      EnvironmentPosition first = new EnvironmentPosition( 4, 4 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( first ) );
+      
+      when( environment.isAvailable( first ) ).thenReturn( false );
+      EnvironmentPosition second = new EnvironmentPosition( 5, 4 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( second ) );
+      
+      when( environment.isAvailable( second ) ).thenReturn( false );
+      EnvironmentPosition third = new EnvironmentPosition( 6, 4 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( third ) );
+      
+      when( environment.isAvailable( third ) ).thenReturn( false );
+      EnvironmentPosition fourth = new EnvironmentPosition( 6, 5 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( fourth ) );
+      
+      when( environment.isAvailable( fourth ) ).thenReturn( false );
+      EnvironmentPosition fifth = new EnvironmentPosition( 6, 6 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( fifth ) );
+      
+      when( environment.isAvailable( fifth ) ).thenReturn( false );
+      EnvironmentPosition sixth = new EnvironmentPosition( 5, 6 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( sixth ) );
+      
+      when( environment.isAvailable( sixth ) ).thenReturn( false );
+      EnvironmentPosition seventh = new EnvironmentPosition( 4, 6 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( seventh ) );
+      
+      when( environment.isAvailable( seventh ) ).thenReturn( false );
+      EnvironmentPosition eighth = new EnvironmentPosition( 4, 5 );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( eighth ) );
+      
+      when( environment.isAvailable( eighth ) ).thenReturn( false );
+      assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( nullValue() ) );
+   }//End Method
+   
+   @Test public void shouldNotHaveOffspringAndMissChanceIfNoSpace(){
+      when( environment.isAvailable( Mockito.any() ) ).thenReturn( false );
+      
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
+      for ( int i = 0; i < FemaleParentHood.PREGNANCY_PERIOD + FemaleParentHood.PREGNANCY_RECOVERY; i++ ) {
+         systemUnderTest.mingle( environment );
+      }
+      systemUnderTest.mingle( environment );
+      verify( environment, never() ).monitorAgent( Mockito.any() );
+      assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
+   }//End Method
+
+}//End Class
