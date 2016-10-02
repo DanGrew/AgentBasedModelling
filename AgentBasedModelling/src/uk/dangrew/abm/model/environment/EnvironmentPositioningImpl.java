@@ -11,6 +11,13 @@ public class EnvironmentPositioningImpl implements EnvironmentPositioning {
    /**
     * {@inheritDoc}
     */
+   @Override public void associate( Environment environment ) {
+      //Do nothing.
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
    @Override public EnvironmentPosition locate( int vertical, int horizontal ) {
       return new EnvironmentPosition( vertical, horizontal );
    }//End Method

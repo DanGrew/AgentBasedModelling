@@ -9,6 +9,12 @@ import uk.dangrew.abm.model.agent.Heading;
 public interface EnvironmentPositioning {
 
    /**
+    * Method to associated the {@link Environment} with this {@link EnvironmentPositioning}. 
+    * @param environment the {@link Environment} to associate.
+    */
+   public void associate( Environment environment );
+   
+   /**
     * Method to locate the vertical and horizontal positions in a grid reference.
     * @param vertical the vertical position.
     * @param horizontal the horizontal position.

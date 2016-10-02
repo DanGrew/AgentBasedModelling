@@ -25,10 +25,10 @@ public class SimulationUITest {
       TestApplication.startPlatform();
       
       environment = new Environment( 100, 100 );
-      environment.applyHorizontalBoundary( 0, 0, 100 );
-      environment.applyHorizontalBoundary( 99, 0, 100 );
-      environment.applyVerticalBoundary( 0, 0, 100 );
-      environment.applyVerticalBoundary( 0, 99, 100 );
+//      environment.applyHorizontalBoundary( 0, 0, 100 );
+//      environment.applyHorizontalBoundary( 99, 0, 100 );
+//      environment.applyVerticalBoundary( 0, 0, 100 );
+//      environment.applyVerticalBoundary( 0, 99, 100 );
       
       environment.applyVerticalBoundary( 30, 20, 40 );
       environment.applyVerticalBoundary( 30, 50, 40 );
@@ -39,7 +39,7 @@ public class SimulationUITest {
       
       Random random = new Random();
       for ( int i = 0; i < 100; i++ ) {
-         Agent agent = new AgentImpl( environmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( 8, 2 ) );
+         Agent agent = new AgentImpl( environmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( random.nextInt( 10 ), random.nextInt( 10 ) ) );
          environment.monitorAgent( agent );
          System.out.println( agent.position() );
       }

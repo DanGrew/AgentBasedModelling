@@ -43,12 +43,12 @@ public class EnvironmentWidget extends GridPane {
       this.representation = new HashMap<>();
       
       environment.grid().forEach( ( position, element ) -> {
-         Rectangle rectangle = new Rectangle( 5, 5 );
+         Rectangle rectangle = new Rectangle( 8, 8 );
          rectangle.setFill( identifyColourFor( element ) );
          representation.put( position, rectangle );
          
          BorderPane border = new BorderPane( rectangle );
-         border.setPadding( new Insets( 1 ) );
+//         border.setPadding( new Insets( 1 ) );
          add( border, position.horizontal(), position.vertical() );
       } );
       

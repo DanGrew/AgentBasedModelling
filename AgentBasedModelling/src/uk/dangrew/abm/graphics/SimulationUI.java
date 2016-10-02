@@ -1,6 +1,9 @@
 package uk.dangrew.abm.graphics;
 
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import uk.dangrew.abm.model.environment.Environment;
 
 /**
@@ -14,6 +17,7 @@ public class SimulationUI extends StackPane {
     */
    public SimulationUI( Environment environment ) {
       getChildren().addAll( new EnvironmentWidget( environment ) );
+      setBackground( new Background( new BackgroundFill( Color.LIGHTGREY, null, null ) ) );
    }//End Constructor
 
 }//End Class

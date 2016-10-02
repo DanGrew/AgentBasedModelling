@@ -31,6 +31,10 @@ public class EnvironmentTest {
       systemUnderTest = new Environment( positioning, 10, 20 );
    }//End Method
    
+   @Test public void shouldAssociateWithPositioning(){
+      verify( positioning ).associate( systemUnderTest );
+   }//End Method
+   
    @Test public void shouldProvideDimensions(){
       assertThat( systemUnderTest.width(), is( 10 ) );
       assertThat( systemUnderTest.height(), is( 20 ) );

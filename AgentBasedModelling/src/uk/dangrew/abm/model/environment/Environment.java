@@ -32,7 +32,7 @@ public class Environment implements EnvironmentPositioning {
     * @param height the height of the grid.
     */
    public Environment( int width, int height ) {
-      this( new EnvironmentPositioningImpl(), width, height );
+      this( new WrappingEnvironmentPositioning(), width, height );
    }//End Constructor
    
    /**
@@ -49,6 +49,7 @@ public class Environment implements EnvironmentPositioning {
       this.width = width;
       this.height = height;
       this.positioning = positioning;
+      this.positioning.associate( this );
       
       this.environment = FXCollections.observableHashMap();
       this.unmodifiableEnvironment = new UnmodifiableObservableMap<>( environment );
@@ -245,6 +246,13 @@ public class Environment implements EnvironmentPositioning {
       agents.remove( currentPosition );
    }//End Method
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void associate( Environment environment ) {
+      throw new UnsupportedOperationException();
+   }//End Method
+   
    /**
     * {@inheritDoc}
     */
