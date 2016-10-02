@@ -1,5 +1,7 @@
 package uk.dangrew.abm.graphics;
 
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
@@ -12,7 +14,6 @@ import uk.dangrew.abm.model.agent.Agent;
 import uk.dangrew.abm.model.agent.AgentImpl;
 import uk.dangrew.abm.model.agent.Heading;
 import uk.dangrew.abm.model.environment.Environment;
-import uk.dangrew.abm.model.environment.EnvironmentPosition;
 import uk.dangrew.sd.graphics.launch.TestApplication;
 
 public class SimulationUITest {
@@ -24,21 +25,21 @@ public class SimulationUITest {
       TestApplication.startPlatform();
       
       environment = new Environment( 100, 100 );
-      environment.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 100 );
-      environment.applyHorizontalBoundary( new EnvironmentPosition( 99, 0 ), 100 );
-      environment.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 100 );
-      environment.applyVerticalBoundary( new EnvironmentPosition( 0, 99 ), 100 );
+      environment.applyHorizontalBoundary( 0, 0, 100 );
+      environment.applyHorizontalBoundary( 99, 0, 100 );
+      environment.applyVerticalBoundary( 0, 0, 100 );
+      environment.applyVerticalBoundary( 0, 99, 100 );
       
-      environment.applyVerticalBoundary( new EnvironmentPosition( 30, 20 ), 40 );
-      environment.applyVerticalBoundary( new EnvironmentPosition( 30, 50 ), 40 );
-      environment.applyVerticalBoundary( new EnvironmentPosition( 30, 80 ), 40 );
+      environment.applyVerticalBoundary( 30, 20, 40 );
+      environment.applyVerticalBoundary( 30, 50, 40 );
+      environment.applyVerticalBoundary( 30, 80, 40 );
       
       
       systemUnderTest = new SimulationUI( environment );
       
       Random random = new Random();
       for ( int i = 0; i < 100; i++ ) {
-         Agent agent = new AgentImpl( new EnvironmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( 8, 2 ) );
+         Agent agent = new AgentImpl( environmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( 8, 2 ) );
          environment.monitorAgent( agent );
          System.out.println( agent.position() );
       }

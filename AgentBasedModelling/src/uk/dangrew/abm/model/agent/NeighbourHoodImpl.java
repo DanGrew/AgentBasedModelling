@@ -48,7 +48,8 @@ class NeighbourHoodImpl implements NeighbourHood {
    @Override public void identifyNeighbourHood( Environment environment ) {
       neighbours.clear();
       
-      EnvironmentPosition topLeftOfNeighbourhood = subjectAgent.position().get().translate( 
+      EnvironmentPosition topLeftOfNeighbourhood = environment.translate( 
+               subjectAgent.position().get(),
                new Heading( -IMMEDIATE_NEIGHBOURHOOD_DISTANCE, -IMMEDIATE_NEIGHBOURHOOD_DISTANCE ) 
       );
       
@@ -57,7 +58,7 @@ class NeighbourHoodImpl implements NeighbourHood {
       for ( int v = vProgress; v < vProgress + IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH; v++ ) {
          final int hProgress = topLeftOfNeighbourhood.horizontal();
          for ( int h = hProgress; h < hProgress + IMMEDIATE_NEIGHBOURHOOD_EDGE_LENGTH; h++ ) {
-            Agent neighbour = environment.agents().get( new EnvironmentPosition( v, h ) );
+            Agent neighbour = environment.agents().get( environment.locate( v, h ) );
             if ( neighbour == subjectAgent ) {
                continue;
             }

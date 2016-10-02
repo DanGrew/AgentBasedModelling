@@ -111,42 +111,42 @@ class FemaleParentHood implements ParentHood {
     * @return the empty {@link EnvironmentPosition} to place the offspring, or null if no space.
     */
    EnvironmentPosition identifyOffspringInitialPosition( Environment environment, EnvironmentPosition parentPosition ){
-      EnvironmentPosition proposedOffspringPosition = parentPosition.translate( new Heading( -1, -1 ) );
+      EnvironmentPosition proposedOffspringPosition = environment.translate( parentPosition, new Heading( -1, -1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( 0, -1 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( 0, -1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( 1, -1 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( 1, -1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( 1, 0 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( 1, 0 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( 1, 1 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( 1, 1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( 0, 1 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( 0, 1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( -1, 1 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( -1, 1 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }
       
-      proposedOffspringPosition = parentPosition.translate( new Heading( -1, 0 ) );
+      proposedOffspringPosition = environment.translate( parentPosition, new Heading( -1, 0 ) );
       if ( environment.isAvailable( proposedOffspringPosition ) ) {
          return proposedOffspringPosition;
       }

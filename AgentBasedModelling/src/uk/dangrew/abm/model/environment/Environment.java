@@ -9,14 +9,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import uk.dangrew.abm.model.agent.Agent;
+import uk.dangrew.abm.model.agent.Heading;
 
 /**
  * The {@link Environment} represents a basic grid system that {@link Agent}s can move in.
  */
-public class Environment {
+public class Environment implements EnvironmentPositioning {
 
    private final int width;
    private final int height;
+   private final EnvironmentPositioning positioning;
+   
    private final ObservableMap< EnvironmentPosition, EnvironmentElement > environment;
    private final UnmodifiableObservableMap< EnvironmentPosition, EnvironmentElement > unmodifiableEnvironment;
    private final ObservableMap< EnvironmentPosition, Agent > agents;
@@ -29,12 +32,24 @@ public class Environment {
     * @param height the height of the grid.
     */
    public Environment( int width, int height ) {
+      this( new EnvironmentPositioningImpl(), width, height );
+   }//End Constructor
+   
+   /**
+    * Constructs a new {@link Environment}.
+    * @param positioning the {@link EnvironmentPositioning} for controlling grid boundaries.
+    * @param width the width of the {@link Environment}.
+    * @param height the height of the {@link Environment}.
+    */
+   Environment( EnvironmentPositioning positioning, int width, int height ) {
       if ( width <= 0 || height <= 0 ) {
          throw new IllegalArgumentException( "Must provide positive dimensions." );
       }
       
       this.width = width;
       this.height = height;
+      this.positioning = positioning;
+      
       this.environment = FXCollections.observableHashMap();
       this.unmodifiableEnvironment = new UnmodifiableObservableMap<>( environment );
       for ( int vertical = 0; vertical < height; vertical++ ) {
@@ -67,18 +82,19 @@ public class Environment {
    /**
     * Method to apply a horizontal boundary from the given {@link EnvironmentPosition} with the given number
     * of steps east, where negative would move west.
-    * @param boundaryStartLocation the {@link EnvironmentPosition} to start the boundary at.
+    * @param verticalStart the vertical start position.
+    * @param horizontalStart the horizontal start position.
     * @param stepsEast the number of steps east, or west if negative.
     */
-   public void applyHorizontalBoundary( EnvironmentPosition boundaryStartLocation, int stepsEast ) {
-      final int startY = boundaryStartLocation.horizontal();
+   public void applyHorizontalBoundary( int verticalStart, int horizontalStart, int stepsEast ) {
+      final int startY = horizontalStart;
       if ( stepsEast > 0 ) {
          for ( int i = startY; i < startY + Math.abs( stepsEast ); i++ ) {
-            place( new EnvironmentPosition( boundaryStartLocation.vertical(), i ), EnvironmentElement.Boundary );
+            place( new EnvironmentPosition( verticalStart, i ), EnvironmentElement.Boundary );
          }
       } else {
          for ( int i = startY; i > startY - Math.abs( stepsEast ); i-- ) {
-            place( new EnvironmentPosition( boundaryStartLocation.vertical(), i ), EnvironmentElement.Boundary );
+            place( new EnvironmentPosition( verticalStart, i ), EnvironmentElement.Boundary );
          }
       }
    }//End Method
@@ -86,18 +102,19 @@ public class Environment {
    /**
     * Method to apply a vertical boundary from the given {@link EnvironmentPosition} with the given number
     * of steps south, where negative would move north.
-    * @param boundaryStartLocation the {@link EnvironmentPosition} to start the boundary at.
+    * @param verticalStart the vertical start position.
+    * @param horizontalStart the horizontal start position.
     * @param stepsSouth the number of steps south, or north if negative.
     */
-   public void applyVerticalBoundary( EnvironmentPosition boundaryStartLocation, int stepsSouth ) {
-      final int startX = boundaryStartLocation.vertical();
+   public void applyVerticalBoundary( int verticalStart, int horizontalStart, int stepsSouth ) {
+      final int startX = verticalStart;
       if ( stepsSouth > 0 ) {
          for ( int i = startX; i < startX + Math.abs( stepsSouth ); i++ ) {
-            place( new EnvironmentPosition( i, boundaryStartLocation.horizontal() ), EnvironmentElement.Boundary );
+            place( new EnvironmentPosition( i, horizontalStart ), EnvironmentElement.Boundary );
          }
       } else {
          for ( int i = startX; i > startX - Math.abs( stepsSouth ); i-- ) {
-            place( new EnvironmentPosition( i, boundaryStartLocation.horizontal() ), EnvironmentElement.Boundary );
+            place( new EnvironmentPosition( i, horizontalStart ), EnvironmentElement.Boundary );
          }
       }
    }//End Method
@@ -226,6 +243,34 @@ public class Environment {
       agent.position().removeListener( agentListeners.remove( agent ) );
       EnvironmentPosition currentPosition = agent.position().get();
       agents.remove( currentPosition );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public EnvironmentPosition locate( int vertical, int horizontal ) {
+      return positioning.locate( vertical, horizontal );
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public EnvironmentPosition horizontalPositionOffset( EnvironmentPosition original, int offset ) {
+      return positioning.horizontalPositionOffset( original, offset );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public EnvironmentPosition verticalPositionOffset( EnvironmentPosition original, int offset ) {
+      return positioning.verticalPositionOffset( original, offset );
+   }//End Method
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override public EnvironmentPosition translate( EnvironmentPosition original, Heading heading ) {
+      return positioning.translate( original, heading );
    }//End Method
 
 }//End Class

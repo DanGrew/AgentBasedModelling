@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -30,7 +31,7 @@ public class EnvironmentWidgetTest {
    @Before public void initialiseSystemUnderTest() {
       TestApplication.startPlatform();
       environment = new Environment( 20, 20 );
-      environment.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 10 );
+      environment.applyHorizontalBoundary( 0, 0, 10 );
       systemUnderTest = new EnvironmentWidget( environment );
    }//End Method
 
@@ -83,13 +84,13 @@ public class EnvironmentWidgetTest {
    }//End Method
    
    @Test public void shouldRemoveColourFromOldPositionAndApplyColourAtNewPosition(){
-      EnvironmentPosition initialPosition = new EnvironmentPosition( 5, 6 ); 
+      EnvironmentPosition initialPosition = environmentPosition( 5, 6 ); 
       Agent agent = new AgentImpl( initialPosition, new Heading( 10, 10 ) );
       environment.monitorAgent( agent );
       
       assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( systemUnderTest.identifyColourFor( agent ) ) );
       agent.move( environment );
       assertThat( systemUnderTest.representationFor( initialPosition ).getFill(), is( Color.WHITE ) );
-      assertThat( systemUnderTest.representationFor( new EnvironmentPosition( 6, 7 ) ).getFill(), is( systemUnderTest.identifyColourFor( agent ) ) );
+      assertThat( systemUnderTest.representationFor( environmentPosition( 6, 7 ) ).getFill(), is( systemUnderTest.identifyColourFor( agent ) ) );
    }//End Method
 }//End Class

@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javafx.beans.value.ChangeListener;
-import uk.dangrew.abm.model.agent.AgentImpl;
-import uk.dangrew.abm.model.agent.ControllableAgent;
-import uk.dangrew.abm.model.agent.Heading;
-import uk.dangrew.abm.model.agent.MovementInterpolatorImpl;
 import uk.dangrew.abm.model.environment.Environment;
 import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
@@ -28,17 +24,16 @@ public class MovementInterpolatorImplTest {
    @Captor private ArgumentCaptor< EnvironmentPosition > positionCaptor;
    
    private ControllableAgent agent;
-   @Mock private Environment environment;
+   private Environment environment;
    private MovementInterpolatorImpl systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
+      environment = new Environment( 100, 100 );
    }//End Method
    
    private void constructSut( int row, int column, int vVelocity, int hVelocity ) {
-      when( environment.isAvailable( Mockito.any() ) ).thenReturn( true );
-      
-      agent = new AgentImpl( new EnvironmentPosition( row, column ), new Heading( vVelocity, hVelocity ) );
+      agent = new AgentImpl( environmentPosition( row, column ), new Heading( vVelocity, hVelocity ) );
       systemUnderTest = new MovementInterpolatorImpl();
       systemUnderTest.associate( agent );
    }//End Method
@@ -57,10 +52,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 6, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 7, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 8, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 9, 7 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 6, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 7, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 8, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 9, 7 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateSouthWest() {
@@ -72,10 +67,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 6, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 7, 4 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 8, 4 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 9, 3 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 6, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 7, 4 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 8, 4 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 9, 3 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateNorthEast() {
@@ -87,10 +82,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 4, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 3, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 2, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 1, 7 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 4, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 3, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 2, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 1, 7 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateNorthWest() {
@@ -102,10 +97,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 4, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 3, 4 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 2, 4 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 1, 3 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 4, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 3, 4 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 2, 4 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 1, 3 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateSouth() {
@@ -117,10 +112,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 5 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 6, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 7, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 8, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 9, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 6, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 7, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 8, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 9, 5 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateEast() {
@@ -132,8 +127,8 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 7 ) );
       
       verify( positionListener, times( 2 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 5, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 5, 7 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 5, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 5, 7 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateWest() {
@@ -145,8 +140,8 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 3 ) );
       
       verify( positionListener, times( 2 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 5, 4 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 5, 3 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 5, 4 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 5, 3 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateNorth() {
@@ -158,10 +153,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 5 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 4, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 3, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 2, 5 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 1, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 4, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 3, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 2, 5 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 1, 5 ) ) );
    }//End Method
    
    @Test public void shouldInterpolateVerticallyWithLargerHorizontalStep() {
@@ -173,10 +168,10 @@ public class MovementInterpolatorImplTest {
       assertThat( agent.position().get().horizontal(), is( 9 ) );
       
       verify( positionListener, times( 4 ) ).changed( Mockito.eq( agent.position() ), Mockito.any(), positionCaptor.capture() );
-      assertThat( positionCaptor.getAllValues().get( 0 ), is( new EnvironmentPosition( 5, 6 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 1 ), is( new EnvironmentPosition( 6, 7 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 2 ), is( new EnvironmentPosition( 6, 8 ) ) );
-      assertThat( positionCaptor.getAllValues().get( 3 ), is( new EnvironmentPosition( 7, 9 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 0 ), is( environmentPosition( 5, 6 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 1 ), is( environmentPosition( 6, 7 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 2 ), is( environmentPosition( 6, 8 ) ) );
+      assertThat( positionCaptor.getAllValues().get( 3 ), is( environmentPosition( 7, 9 ) ) );
    }//End Method
    
 }//End Class

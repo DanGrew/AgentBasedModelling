@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
 import java.util.Random;
 
@@ -19,7 +20,6 @@ import org.mockito.MockitoAnnotations;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import uk.dangrew.abm.model.environment.Environment;
-import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class MaleParentHoodTest {
 
@@ -46,7 +46,7 @@ public class MaleParentHoodTest {
       when( femaleNeighbour2.getAgeBracket() ).thenReturn( AgeBracket.Elder );
       when( maleNeighbour.gender() ).thenReturn( Gender.Male );
       
-      agent = new AgentImpl( new EnvironmentPosition( 0, 0 ), new Heading( 10, 10 ) );
+      agent = new AgentImpl( environmentPosition( 0, 0 ), new Heading( 10, 10 ) );
       agent.setAge( agent.lifeExpectancy().get() - 1 );
       systemUnderTest = new MaleParentHood( random );
       systemUnderTest.associate( agent, neighbourHood );

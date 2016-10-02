@@ -86,7 +86,7 @@ public class FluidMovementInterpolator implements MovementInterpolator {
    private boolean positiveHorizontalMove( Environment environment ) {
       while( horizontal >= BOUND ) {
          horizontal -= STEP;
-         if ( collides( environment, agent.position().get().horizontal( STEP ) ) ) {
+         if ( collides( environment, environment.horizontalPositionOffset( agent.position().get(), STEP ) ) ) {
             return true;
          }
       }
@@ -102,7 +102,7 @@ public class FluidMovementInterpolator implements MovementInterpolator {
    private boolean negativeHorizontalMove( Environment environment ) {
       while( horizontal <= -BOUND ) {
          horizontal += STEP;
-         if ( collides( environment, agent.position().get().horizontal( -STEP ) ) ) {
+         if ( collides( environment, environment.horizontalPositionOffset( agent.position().get(), -STEP ) ) ) {
             return true;
          }
       }
@@ -118,7 +118,7 @@ public class FluidMovementInterpolator implements MovementInterpolator {
    private boolean positiveVerticalMove( Environment environment ) {
       while( vertical >= BOUND ) {
          vertical -= STEP;
-         if ( collides( environment, agent.position().get().vertical( STEP ) ) ) {
+         if ( collides( environment, environment.verticalPositionOffset( agent.position().get(), STEP ) ) ) {
             return true;
          }
       }
@@ -134,7 +134,7 @@ public class FluidMovementInterpolator implements MovementInterpolator {
    private boolean negativeVerticalMove( Environment environment ) {
       while( vertical <= -BOUND ) {
          vertical += STEP;
-         if ( collides( environment, agent.position().get().vertical( -STEP ) ) ) {
+         if ( collides( environment, environment.verticalPositionOffset( agent.position().get(), -STEP ) ) ) {
             return true;
          }
       }

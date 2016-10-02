@@ -71,13 +71,14 @@ class MovementInterpolatorImpl implements MovementInterpolator {
     */
    private boolean interpolate( Environment environment, int vertical, int horizontal ) {
       System.out.println( "checking: " + vertical + ", " + horizontal );
-      if ( agent.position().get().equals( new EnvironmentPosition( vertical, horizontal ) ) ) {
+      EnvironmentPosition position = environment.locate( vertical, horizontal );
+      if ( agent.position().get().equals( position ) ) {
          return false;
       }
-      if ( !environment.isAvailable( new EnvironmentPosition( vertical, horizontal ) ) ) {
+      if ( !environment.isAvailable( position ) ) {
          return true;
       }
-      agent.setPosition( new EnvironmentPosition( vertical, horizontal ) );
+      agent.setPosition( position );
       return false;
    }//End Method
    

@@ -3,11 +3,11 @@ package uk.dangrew.abm.model.agent;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
 import java.util.Random;
 
@@ -18,7 +18,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import uk.dangrew.abm.model.environment.Environment;
-import uk.dangrew.abm.model.environment.EnvironmentPosition;
 
 public class LifecycleTest {
 
@@ -29,7 +28,7 @@ public class LifecycleTest {
 
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
-      agent = new AgentImpl( new EnvironmentPosition( 0, 0 ), new Heading( 0, 0 ) );
+      agent = new AgentImpl( environmentPosition( 0, 0 ), new Heading( 0, 0 ) );
       systemUnderTest = new Lifecycle( randomizer );
       systemUnderTest.associate( agent );
    }//End Method
@@ -130,7 +129,7 @@ public class LifecycleTest {
       for( int i = 0; i < Lifecycle.STATIONARY_LIMIT; i++ ) {
          systemUnderTest.age( environment );
       }
-      agent.setPosition( new EnvironmentPosition( 100, 100 ) );
+      agent.setPosition( environmentPosition( 100, 100 ) );
       systemUnderTest.age( environment );
       assertThat( agent.age().get(), is( greaterThan( Lifecycle.STATIONARY_LIMIT ) ) );
    }//End Method

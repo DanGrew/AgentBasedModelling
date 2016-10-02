@@ -1,7 +1,5 @@
 package uk.dangrew.abm.model.environment;
 
-import uk.dangrew.abm.model.agent.Heading;
-
 /**
  * The {@link EnvironmentPosition} represents a specific location in the {@link Environment}.
  */
@@ -15,7 +13,7 @@ public class EnvironmentPosition {
     * @param vertical the vertical grid reference, the row.
     * @param horizontal the horizontal grid reference, the column.
     */
-   public EnvironmentPosition( int vertical, int horizontal ) {
+   EnvironmentPosition( int vertical, int horizontal ) {
       this.vertical = vertical;
       this.horizontal = horizontal;
    }//End Constructor
@@ -34,34 +32,6 @@ public class EnvironmentPosition {
     */
    public int horizontal() {
       return horizontal;
-   }//End Method
-   
-   /**
-    * Method to construct a horizontal shift of this {@link EnvironmentPosition}.
-    * @param offset the horizontal offset.
-    * @return the {@link EnvironmentPosition} of this accounting for the offset.
-    */
-   public EnvironmentPosition horizontal( int offset ) {
-      return new EnvironmentPosition( vertical, horizontal + offset );
-   }//End Method
-   
-   /**
-    * Method to construct a vertical shift of this {@link EnvironmentPosition}.
-    * @param offset the vertical offset.
-    * @return the {@link EnvironmentPosition} of this accounting for the offset.
-    */
-   public EnvironmentPosition vertical( int offset ) {
-      return new EnvironmentPosition( vertical + offset, horizontal );
-   }//End Method
-   
-   /**
-    * Method to construct a shift of this {@link EnvironmentPosition}.
-    * @param verticalOffset the vertical offset.
-    * @param horizontalOffset the horizontal offset.
-    * @return the {@link EnvironmentPosition} of this accounting for the offset.
-    */
-   public EnvironmentPosition translate( Heading heading ) {
-      return new EnvironmentPosition( vertical + heading.verticalVelocity(), horizontal + heading.horizontalVelocity() );
    }//End Method
    
    /**

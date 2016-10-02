@@ -6,9 +6,14 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import com.sun.javafx.collections.UnmodifiableObservableMap;
 
@@ -18,10 +23,12 @@ import uk.dangrew.abm.model.agent.Heading;
 
 public class EnvironmentTest {
 
+   @Spy private EnvironmentPositioningImpl positioning;
    private Environment systemUnderTest;
 
    @Before public void initialiseSystemUnderTest() {
-      systemUnderTest = new Environment( 10, 20 );
+      MockitoAnnotations.initMocks( this );
+      systemUnderTest = new Environment( positioning, 10, 20 );
    }//End Method
    
    @Test public void shouldProvideDimensions(){
@@ -54,7 +61,7 @@ public class EnvironmentTest {
    }//End Method
    
    @Test public void shouldProvideHorizontalBoundary() {
-      systemUnderTest.applyHorizontalBoundary( new EnvironmentPosition( 0, 0 ), 4 );
+      systemUnderTest.applyHorizontalBoundary( 0, 0, 4 );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 0 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 1 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 2 ) ), is( true ) );
@@ -64,7 +71,7 @@ public class EnvironmentTest {
    }//End Method
    
    @Test public void shouldProvideNegativeHorizontalBoundary() {
-      systemUnderTest.applyHorizontalBoundary( new EnvironmentPosition( 0, 5 ), -2 );
+      systemUnderTest.applyHorizontalBoundary( 0, 5, -2 );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 2 ) ), is( false ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 3 ) ), is( false ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 4 ) ), is( true ) );
@@ -73,15 +80,15 @@ public class EnvironmentTest {
    }//End Method
    
    @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreHorizontalBoundaryBeyondEdges() {
-      systemUnderTest.applyHorizontalBoundary( new EnvironmentPosition( 0, 19 ), 3 );
+      systemUnderTest.applyHorizontalBoundary( 0, 19, 3 );
    }//End Method
    
    @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreNegativeHorizontalBoundaryBeyondEdges() {
-      systemUnderTest.applyHorizontalBoundary( new EnvironmentPosition( 1, 0 ), -3 );
+      systemUnderTest.applyHorizontalBoundary( 1, 0, -3 );
    }//End Method
    
    @Test public void shouldProvideVerticalBoundary() {
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 4 );
+      systemUnderTest.applyVerticalBoundary( 0, 0, 4 );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 0, 0 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 1, 0 ) ), is( true ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 2, 0 ) ), is( true ) );
@@ -91,7 +98,7 @@ public class EnvironmentTest {
    }//End Method
    
    @Test public void shouldProvideNegativeVerticalBoundary() {
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 5, 0 ), -2 );
+      systemUnderTest.applyVerticalBoundary( 5, 0, -2 );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 2, 0 ) ), is( false ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 3, 0 ) ), is( false ) );
       assertThat( systemUnderTest.isBoundary( new EnvironmentPosition( 4, 0 ) ), is( true ) );
@@ -100,11 +107,11 @@ public class EnvironmentTest {
    }//End Method
    
    @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreVerticalBoundaryBeyondEdges() {
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 9, 19 ), 3 );
+      systemUnderTest.applyVerticalBoundary( 9, 19, 3 );
    }//End Method
    
    @Test( expected = ArrayIndexOutOfBoundsException.class ) public void shouldNotIgnoreNegativeVerticalBoundaryBeyondEdges() {
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 1, 0 ), -3 );
+      systemUnderTest.applyVerticalBoundary( 1, 0, -3 );
    }//End Method
    
    @Test public void shouldIdentifyAllOutsideEnvironmentAsBoundary(){
@@ -117,7 +124,7 @@ public class EnvironmentTest {
    
    @Test public void shouldProvideEnvironmentPositions(){
       assertThat( systemUnderTest.grid(), is( notNullValue() ) );
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 2 );
+      systemUnderTest.applyVerticalBoundary( 0, 0, 2 );
       assertThat( systemUnderTest.grid().get( new EnvironmentPosition( 0, 0 ) ), is( EnvironmentElement.Boundary ) );
    }//End Method
    
@@ -159,7 +166,7 @@ public class EnvironmentTest {
    }//End Method
    
    @Test public void shouldNotShowPositionToBeAvailableWhenBoundaryPresent(){
-      systemUnderTest.applyVerticalBoundary( new EnvironmentPosition( 0, 0 ), 5 );
+      systemUnderTest.applyVerticalBoundary( 0, 0, 5 );
       assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( -1, -1 ) ), is( false ) );
       assertThat( systemUnderTest.isAvailable( new EnvironmentPosition( 4, 0 ) ), is( false ) );
    }//End Method
@@ -178,5 +185,40 @@ public class EnvironmentTest {
       agent.move( systemUnderTest );
       assertThat( systemUnderTest.agents().get( agent.position().get() ), is( nullValue() ) );
       assertThat( systemUnderTest.grid().get( agent.position().get() ), is( EnvironmentElement.Space ) );
+   }//End Method
+   
+   @Test public void shouldProvideLocation(){
+      EnvironmentPosition result = mock( EnvironmentPosition.class );
+      when( positioning.locate( 434, 978 ) ).thenReturn( result );
+      
+      assertThat( systemUnderTest.locate( 434, 978 ), is( result ) );
+      verify( positioning ).locate( 434, 978 );
+   }//End Method
+   
+   @Test public void shouldProvideHorizontalOffsetting(){
+      EnvironmentPosition original = mock( EnvironmentPosition.class );
+      
+      assertThat( 
+               systemUnderTest.horizontalPositionOffset( original, 3 ), 
+               is( positioning.horizontalPositionOffset( original, 3 ) ) 
+      );
+   }//End Method
+   
+   @Test public void shouldProvideVerticalOffsetting(){
+      EnvironmentPosition original = mock( EnvironmentPosition.class );
+      
+      assertThat( 
+               systemUnderTest.verticalPositionOffset( original, 3 ), 
+               is( positioning.verticalPositionOffset( original, 3 ) ) 
+      );
+   }//End Method
+   
+   @Test public void shouldProvideTranslation(){
+      EnvironmentPosition original = mock( EnvironmentPosition.class );
+      
+      assertThat( 
+               systemUnderTest.translate( original, new Heading( 3, 4 ) ), 
+               is( positioning.translate( original, new Heading( 3, 4 ) ) ) 
+      );
    }//End Method
 }//End Class

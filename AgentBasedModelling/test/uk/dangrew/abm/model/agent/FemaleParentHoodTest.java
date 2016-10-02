@@ -5,9 +5,12 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
+import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.translate;
 
 import java.util.Random;
 
@@ -18,6 +21,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import uk.dangrew.abm.model.environment.Environment;
 import uk.dangrew.abm.model.environment.EnvironmentPosition;
@@ -30,7 +34,7 @@ public class FemaleParentHoodTest {
    
    @Mock private Random random;
    private ControllableAgent agent;
-   @Mock private Environment environment;
+   private Environment environment;
    @Mock private NeighbourHood neighbourHood;
    private FemaleParentHood systemUnderTest;
 
@@ -40,9 +44,9 @@ public class FemaleParentHoodTest {
       when( maleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Adult );
       when( femaleNeighbour.gender() ).thenReturn( Gender.Female );
       when( femaleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Adult );
-      when( environment.isAvailable( Mockito.any() ) ).thenReturn( true );
       
-      agent = new AgentImpl( new EnvironmentPosition( 0, 0 ), new Heading( 10, 10 ) );
+      environment = spy( new Environment( 100, 100 ) );
+      agent = new AgentImpl( environmentPosition( 0, 0 ), new Heading( 10, 10 ) );
       agent.setAge( agent.lifeExpectancy().get() - 1 );
       systemUnderTest = new FemaleParentHood( random );
       systemUnderTest.associate( agent, neighbourHood );
@@ -62,7 +66,7 @@ public class FemaleParentHoodTest {
       systemUnderTest.mingle( environment );
       verify( environment ).monitorAgent( agentCaptor.capture() );
       
-      assertThat( agentCaptor.getValue().position().get(), is( agent.position().get().translate( new Heading( -1, -1 ) ) ) );
+      assertThat( agentCaptor.getValue().position().get(), is( translate( agent.position().get(), 1, 0 ) ) );
       assertThat( agentCaptor.getValue().heading().get(), is( agent.heading().get() ) );
       
       systemUnderTest.mingle( environment );
@@ -94,7 +98,7 @@ public class FemaleParentHoodTest {
          systemUnderTest.mingle( environment );
       }
       
-      verify( environment, never() ).monitorAgent( Mockito.any() );
+      assertThat( environment.agents().isEmpty(), is( true ) );
    }//End Method
    
    @Test public void shouldIgnoreMatingFemale(){
@@ -124,37 +128,37 @@ public class FemaleParentHoodTest {
    }//End Method
    
    @Test public void shouldCheckAntiClockwiseAroundAgentForOffspringPosition(){
-      EnvironmentPosition position = new EnvironmentPosition( 5, 5 );
+      EnvironmentPosition position = environmentPosition( 5, 5 );
       
-      EnvironmentPosition first = new EnvironmentPosition( 4, 4 );
+      EnvironmentPosition first = environmentPosition( 4, 4 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( first ) );
       
       when( environment.isAvailable( first ) ).thenReturn( false );
-      EnvironmentPosition second = new EnvironmentPosition( 5, 4 );
+      EnvironmentPosition second = environmentPosition( 5, 4 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( second ) );
       
       when( environment.isAvailable( second ) ).thenReturn( false );
-      EnvironmentPosition third = new EnvironmentPosition( 6, 4 );
+      EnvironmentPosition third = environmentPosition( 6, 4 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( third ) );
       
       when( environment.isAvailable( third ) ).thenReturn( false );
-      EnvironmentPosition fourth = new EnvironmentPosition( 6, 5 );
+      EnvironmentPosition fourth = environmentPosition( 6, 5 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( fourth ) );
       
       when( environment.isAvailable( fourth ) ).thenReturn( false );
-      EnvironmentPosition fifth = new EnvironmentPosition( 6, 6 );
+      EnvironmentPosition fifth = environmentPosition( 6, 6 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( fifth ) );
       
       when( environment.isAvailable( fifth ) ).thenReturn( false );
-      EnvironmentPosition sixth = new EnvironmentPosition( 5, 6 );
+      EnvironmentPosition sixth = environmentPosition( 5, 6 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( sixth ) );
       
       when( environment.isAvailable( sixth ) ).thenReturn( false );
-      EnvironmentPosition seventh = new EnvironmentPosition( 4, 6 );
+      EnvironmentPosition seventh = environmentPosition( 4, 6 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( seventh ) );
       
       when( environment.isAvailable( seventh ) ).thenReturn( false );
-      EnvironmentPosition eighth = new EnvironmentPosition( 4, 5 );
+      EnvironmentPosition eighth = environmentPosition( 4, 5 );
       assertThat( systemUnderTest.identifyOffspringInitialPosition( environment, position ), is( eighth ) );
       
       when( environment.isAvailable( eighth ) ).thenReturn( false );
@@ -162,7 +166,12 @@ public class FemaleParentHoodTest {
    }//End Method
    
    @Test public void shouldNotHaveOffspringAndMissChanceIfNoSpace(){
-      when( environment.isAvailable( Mockito.any() ) ).thenReturn( false );
+      agent.setPosition( environmentPosition( 10, 10 ) );
+      environment.applyHorizontalBoundary( 9, 9, 3 );
+      environment.applyHorizontalBoundary( 11, 9, 3 );
+      environment.applyHorizontalBoundary( 10, 9, 1 );
+      environment.applyHorizontalBoundary( 9, 9, 3 );
+      environment.applyHorizontalBoundary( 10, 11, 1 );
       
       assertThat( systemUnderTest.mate( maleNeighbour ), is( true ) );
       assertThat( systemUnderTest.mate( maleNeighbour ), is( false ) );
