@@ -46,7 +46,7 @@ public class FemaleParentHoodTest {
       when( femaleNeighbour.getAgeBracket() ).thenReturn( AgeBracket.Adult );
       
       environment = spy( new Environment( 100, 100 ) );
-      agent = new AgentImpl( environmentPosition( 0, 0 ), new Heading( 10, 10 ) );
+      agent = new AgentImpl( environmentPosition( 10, 10 ), new Heading( 10, 10 ) );
       agent.setAge( agent.lifeExpectancy().get() - 1 );
       systemUnderTest = new FemaleParentHood( random );
       systemUnderTest.associate( agent, neighbourHood );
@@ -66,7 +66,7 @@ public class FemaleParentHoodTest {
       systemUnderTest.mingle( environment );
       verify( environment ).monitorAgent( agentCaptor.capture() );
       
-      assertThat( agentCaptor.getValue().position().get(), is( translate( agent.position().get(), 1, 0 ) ) );
+      assertThat( agentCaptor.getValue().position().get(), is( translate( agent.position().get(), -1, -1 ) ) );
       assertThat( agentCaptor.getValue().heading().get(), is( agent.heading().get() ) );
       
       systemUnderTest.mingle( environment );
