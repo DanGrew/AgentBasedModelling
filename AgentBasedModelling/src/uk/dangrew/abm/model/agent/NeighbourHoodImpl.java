@@ -69,38 +69,4 @@ class NeighbourHoodImpl implements NeighbourHood {
       }
    }//End Method
    
-   /**
-    * {@inheritDoc}
-    */
-   @Override public boolean respondToNeighbours() {
-      if ( neighbours.isEmpty() ) {
-         return false;
-      }
-      
-      double averageH = 0.0;
-      double averageV = 0.0;
-      for( Agent agent : neighbours ) {
-         averageH += agent.heading().get().horizontalVelocity();
-         averageV += agent.heading().get().verticalVelocity();
-      }
-      averageH /= neighbours.size();
-      averageV /= neighbours.size();
-      
-      int headingH = ( int )Math.round( averageH );
-      int headingV = ( int )Math.round( averageV );
-      
-      if ( headingH == 0 && headingV == 0 ) {
-         //Take the initiative and move!
-         return false;
-      }
-      
-      Heading proposedHeading = new Heading( headingV, headingH );
-      if ( subjectAgent.heading().get().equals( proposedHeading ) ) {
-         //Unchanged
-         return false;
-      }
-      subjectAgent.setHeading( proposedHeading );
-      return true;
-   }//End Method
-
 }//End Class

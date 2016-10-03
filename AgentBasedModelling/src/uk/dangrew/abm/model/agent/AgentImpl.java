@@ -19,7 +19,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    private int reproductiveDrive;
    
    private final MovementInterpolator interpolator;
-   private final HeadingAdjuster headingAdjuster;
+   private final SwarmingNature swarmingNature;
    private final NeighbourHood neighbourHood;
    private final Lifecycle lifecycle;
    private ParentHood parentHood;
@@ -32,7 +32,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
       this( 
                new FluidMovementInterpolator(), 
-               new HeadingAdjuster(), 
+               new SwarmingNatureImpl(), 
                new NeighbourHoodImpl(), 
                new Lifecycle(),
                position, heading 
@@ -42,7 +42,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    /**
     * Constructs a new {@link AgentImpl}.
     * @param interpolator the {@link MovementInterpolator} for controlling movement.
-    * @param headingAdjuster the {@link HeadingAdjuster} for controlling the {@link Heading}.
+    * @param headingAdjuster the {@link SwarmingNature} for controlling the {@link Heading}.
     * @param neighbourHood the {@link NeighbourHood} for responding to.
     * @param lifecycle the {@link Lifecycle} of the {@link Agent}.
     * @param position the {@link EnvironmentPosition} to start at.
@@ -50,7 +50,7 @@ public class AgentImpl implements Agent, ControllableAgent {
     */
    AgentImpl( 
             MovementInterpolator interpolator, 
-            HeadingAdjuster headingAdjuster, 
+            SwarmingNature swarmingNature, 
             NeighbourHood neighbourHood,
             Lifecycle lifecycle,
             EnvironmentPosition position, 
@@ -63,10 +63,10 @@ public class AgentImpl implements Agent, ControllableAgent {
       
       this.interpolator = interpolator;
       this.interpolator.associate( this );
-      this.headingAdjuster = headingAdjuster;
-      this.headingAdjuster.associate( this );
       this.neighbourHood = neighbourHood;
       this.neighbourHood.associate( this );
+      this.swarmingNature = swarmingNature;
+      this.swarmingNature.associate( this, neighbourHood );
       this.lifecycle = lifecycle;
       this.lifecycle.associate( this );
       this.lifecycle.birth();
@@ -182,10 +182,10 @@ public class AgentImpl implements Agent, ControllableAgent {
          return;
       }
       neighbourHood.identifyNeighbourHood( environment );
-      neighbourHood.respondToNeighbours();
+      swarmingNature.respondToNeighbours();
       parentHood.mingle( environment );
       if ( interpolator.move( environment ) ) {
-         headingAdjuster.changeHeading();
+         swarmingNature.randomizeHeading();
       }
    }//End Method
    

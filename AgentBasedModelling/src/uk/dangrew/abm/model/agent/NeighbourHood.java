@@ -26,11 +26,4 @@ interface NeighbourHood {
     */
    public void identifyNeighbourHood( Environment environment );
    
-   /**
-    * Method to respond to the {@link Agent}s in the {@link NeighbourHood} according to the rules
-    * defined in this {@link NeighbourHood}.
-    * @return true if affected by neighbouring {@link Agent}s.
-    */
-   public boolean respondToNeighbours();
-
 }//End Interface

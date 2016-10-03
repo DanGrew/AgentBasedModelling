@@ -26,7 +26,7 @@ public class AgentImplTest {
    private static final int V_VELOCITY = 5;
    
    @Mock private MovementInterpolator interpolator;
-   @Mock private HeadingAdjuster headingAdjuster;
+   @Mock private SwarmingNatureImpl swarmingNature;
    @Mock private NeighbourHood neighbourHood;
    @Mock private Lifecycle lifecyle;
    @Mock private ParentHood parentHood;
@@ -36,7 +36,7 @@ public class AgentImplTest {
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
       systemUnderTest = new AgentImpl( 
-               interpolator, headingAdjuster, neighbourHood, lifecyle, 
+               interpolator, swarmingNature, neighbourHood, lifecyle, 
                environmentPosition( 5, 7 ), new Heading( V_VELOCITY, H_VELOCITY ) 
       );
       systemUnderTest.setGender( Gender.Male, parentHood );
@@ -46,8 +46,8 @@ public class AgentImplTest {
       verify( interpolator ).associate( systemUnderTest );
    }//End Method
    
-   @Test public void shouldBeAssociatedWithHeadingAdjuster(){
-      verify( headingAdjuster ).associate( systemUnderTest );
+   @Test public void shouldBeAssociatedWithSwarmingNature(){
+      verify( swarmingNature ).associate( systemUnderTest, neighbourHood );
    }//End Method
    
    @Test public void shouldBeAssociatedWithNeighbourHood(){
@@ -76,20 +76,20 @@ public class AgentImplTest {
       when( interpolator.move( environment ) ).thenReturn( false );
       systemUnderTest.move( environment );
       verify( interpolator ).move( environment );
-      verify( headingAdjuster, never() ).changeHeading();
+      verify( swarmingNature, never() ).randomizeHeading();
    }//End Method
    
    @Test public void shouldChangeHeadingIfMovedIntoBoundary(){
       when( interpolator.move( environment ) ).thenReturn( true );
       systemUnderTest.move( environment );
       verify( interpolator ).move( environment );
-      verify( headingAdjuster ).changeHeading();
+      verify( swarmingNature ).randomizeHeading();
    }//End Method
    
    @Test public void shouldUnconditionallyIdentifyNeighbourHoodAndRespondToIt(){
       systemUnderTest.move( environment );
       verify( neighbourHood ).identifyNeighbourHood( environment );
-      verify( neighbourHood ).respondToNeighbours();
+      verify( swarmingNature ).respondToNeighbours();
    }//End Method
    
    @Test public void shouldIdentifyNeighbourHoodBeforeAnyOtherOperations(){
@@ -97,12 +97,12 @@ public class AgentImplTest {
       
       systemUnderTest.move( environment );
       
-      InOrder order = inOrder( neighbourHood, parentHood, interpolator, headingAdjuster );
+      InOrder order = inOrder( neighbourHood, parentHood, interpolator, swarmingNature );
       order.verify( neighbourHood ).identifyNeighbourHood( environment );
-      order.verify( neighbourHood ).respondToNeighbours();
+      order.verify( swarmingNature ).respondToNeighbours();
       order.verify( parentHood ).mingle( environment );
       order.verify( interpolator ).move( environment );
-      order.verify( headingAdjuster ).changeHeading();
+      order.verify( swarmingNature ).randomizeHeading();
    }//End Method
    
    @Test public void shouldProvideAge(){
@@ -155,7 +155,7 @@ public class AgentImplTest {
       when( lifecyle.getAgeBracket() ).thenReturn( AgeBracket.Complete );
       systemUnderTest.move( environment );
       verify( neighbourHood, never() ).identifyNeighbourHood( environment );
-      verify( neighbourHood, never() ).respondToNeighbours();
+      verify( swarmingNature, never() ).respondToNeighbours();
       verify( interpolator, never() ).move( environment );
       verify( parentHood, never() ).mingle( environment );
    }//End Method

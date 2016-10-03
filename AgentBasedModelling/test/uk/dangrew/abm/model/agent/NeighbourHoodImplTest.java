@@ -1,7 +1,6 @@
 package uk.dangrew.abm.model.agent;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
@@ -43,28 +42,6 @@ public class NeighbourHoodImplTest {
       systemUnderTest.associate( subjectAgent );
    }//End Method
 
-   @Test public void shouldTryToMatchHeadingOfSingleAgentInImmediate() {
-      agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( -10, -10 ) );
-      
-      systemUnderTest.identifyNeighbourHood( environment );
-      assertThat( systemUnderTest.respondToNeighbours(), is( true ) );
-      assertThat( subjectAgent.heading().get(), is( agent1.heading().get() ) );
-   }//End Method
-   
-   @Test public void shouldTryToMatchHeadingOfThoseInImmediate() {
-      agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( -9, 0 ) );
-      agent2.setPosition( environmentPosition( 7, 3 ) );
-      agent2.setHeading( new Heading( -9, -3 ) );
-      agent3.setPosition( environmentPosition( 3, 7 ) );
-      agent3.setHeading( new Heading( -6, -3 ) );
-      
-      systemUnderTest.identifyNeighbourHood( environment );
-      assertThat( systemUnderTest.respondToNeighbours(), is( true ) );
-      assertThat( subjectAgent.heading().get(), is( new Heading( -8, -2 ) ) );
-   }//End Method
-   
    @Test public void shouldIdentifyAllAgentsInNeighbourHood() {
       agent1.setPosition( environmentPosition( 6, 6 ) );
       agent2.setPosition( environmentPosition( 7, 3 ) );
@@ -82,37 +59,6 @@ public class NeighbourHoodImplTest {
       systemUnderTest.identifyNeighbourHood( environment );
       systemUnderTest.identifyNeighbourHood( environment );
       assertThat( systemUnderTest.neighbours(), containsInAnyOrder( agent1, agent2, agent3 ) );
-   }//End Method
-   
-   @Test public void shouldNotRespondToNeighboursIfNotCloseEnough(){
-      systemUnderTest.identifyNeighbourHood( environment );
-      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
-   }//End Method
-   
-   @Test public void shouldHeadTowardsThoseInOutsideNeighbourhood() {
-//      fail( "Not yet implemented" );
-   }//End Method
-   
-   @Test public void shouldIdentifyNoChangeInHeadingAsAResult() {
-      agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( 10, 10 ) );
-      
-      systemUnderTest.identifyNeighbourHood( environment );
-      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
-      assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
-   }//End Method
-   
-   @Test public void shouldTakeTheLeadIfVelocityIsZero() {
-      agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( 0, 0 ) );
-      agent2.setPosition( environmentPosition( 7, 3 ) );
-      agent2.setHeading( new Heading( 0, 0 ) );
-      agent3.setPosition( environmentPosition( 3, 7 ) );
-      agent3.setHeading( new Heading( 0, 0 ) );
-      
-      systemUnderTest.identifyNeighbourHood( environment );
-      assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
-      assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
    }//End Method
 
 }//End Class
