@@ -10,10 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import uk.dangrew.abm.model.agent.ControllableAgent;
-import uk.dangrew.abm.model.agent.Heading;
-import uk.dangrew.abm.model.agent.HeadingAdjuster;
-
 public class HeadingAdjusterTest {
 
    @Mock private ControllableAgent agent;
@@ -31,19 +27,10 @@ public class HeadingAdjusterTest {
    }//End Method
 
    @Test public void shouldRandomizeNewVelocityWithoutInversion(){
-      when( randomizer.nextInt( HeadingAdjuster.VELOCITY_DISTRIBUTION ) ).thenReturn( 4 );
-      when( randomizer.nextBoolean() ).thenReturn( true, true );
+      when( randomizer.nextInt( FixedHeading.values().length ) ).thenReturn( 4 );
       
       systemUnderTest.changeHeading();
-      verify( agent ).setHeading( new Heading( 6, 4 ) );
+      verify( agent ).setHeading( FixedHeading.values()[ 4 ].heading() );
    }//End Method
    
-   @Test public void shouldRandomizeNewVelocityWithInversion(){
-      when( randomizer.nextInt( HeadingAdjuster.VELOCITY_DISTRIBUTION ) ).thenReturn( 1 );
-      when( randomizer.nextBoolean() ).thenReturn( false, false );
-      
-      systemUnderTest.changeHeading();
-      verify( agent ).setHeading( new Heading( -9, -1 ) );
-   }//End Method
-
 }//End Class

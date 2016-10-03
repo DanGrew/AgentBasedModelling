@@ -7,8 +7,6 @@ import java.util.Random;
  */
 class HeadingAdjuster {
 
-   static final int VELOCITY_DISTRIBUTION = 10;
-   
    private final Random random;
    private ControllableAgent agent;
    
@@ -42,21 +40,10 @@ class HeadingAdjuster {
     * Method to change the heading of the {@link Agent}.
     */
    void changeHeading(){
-      int proportion = random.nextInt( VELOCITY_DISTRIBUTION );
-      boolean positiveHorizontal = random.nextBoolean();
-      boolean positiveVertical = random.nextBoolean();
+      int nextInt = random.nextInt( FixedHeading.values().length );
+      FixedHeading heading = FixedHeading.values()[ nextInt ];
       
-      int horizontalProportion = proportion;
-      int verticalProportion = VELOCITY_DISTRIBUTION - horizontalProportion;
-      
-      if ( !positiveHorizontal ) {
-         horizontalProportion = Math.negateExact( horizontalProportion );
-      }
-      if ( !positiveVertical ) {
-         verticalProportion = Math.negateExact( verticalProportion );
-      }
-      
-      agent.setHeading( new Heading( verticalProportion, horizontalProportion ) );
+      agent.setHeading( heading.heading() );
    }//End Method
    
 }//End Class
