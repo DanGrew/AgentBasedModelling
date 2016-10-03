@@ -8,6 +8,7 @@ import java.util.Random;
 class SwarmingNatureImpl implements SwarmingNature {
 
    private final Random random;
+   private final FixedHeadings headings;
    private ControllableAgent agent;
    private NeighbourHood neighbourHood;
    
@@ -24,6 +25,7 @@ class SwarmingNatureImpl implements SwarmingNature {
     */
    SwarmingNatureImpl( Random random ){
       this.random = random;
+      this.headings = new FixedHeadings();
    }//End Constructor
    
    /**
@@ -72,7 +74,8 @@ class SwarmingNatureImpl implements SwarmingNature {
          return false;
       }
       
-      Heading proposedHeading = new Heading( headingV, headingH );
+      FixedHeading fixedHeading = headings.calculateHeading( headingV, headingH );
+      Heading proposedHeading = fixedHeading.heading();
       if ( agent.heading().get().equals( proposedHeading ) ) {
          //Unchanged
          return false;

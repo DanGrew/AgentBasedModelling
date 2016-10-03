@@ -55,7 +55,7 @@ public class SwarmingNatureImplTest {
       systemUnderTest.associate( subjectAgent, neighbourHood );
    }//End Method
 
-   @Test public void shouldRandomizeNewVelocityWithoutInversion(){
+   @Test public void shouldRandomizeNewVelocity(){
       when( randomizer.nextInt( FixedHeading.values().length ) ).thenReturn( 4 );
       
       systemUnderTest.randomizeHeading();
@@ -64,11 +64,11 @@ public class SwarmingNatureImplTest {
    
    @Test public void shouldTryToMatchHeadingOfSingleAgentInImmediate() {
       agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( -10, -10 ) );
+      agent1.setHeading( FixedHeading.NE_19.heading() );
       
       neighbours.addAll( agent1 );
       assertThat( systemUnderTest.respondToNeighbours(), is( true ) );
-      assertThat( subjectAgent.heading().get(), is( agent1.heading().get() ) );
+      assertThat( subjectAgent.heading().get(), is( FixedHeading.NE_19.heading() ) );
    }//End Method
    
    @Test public void shouldTryToMatchHeadingOfThoseInImmediate() {
@@ -94,11 +94,12 @@ public class SwarmingNatureImplTest {
    
    @Test public void shouldIdentifyNoChangeInHeadingAsAResult() {
       agent1.setPosition( environmentPosition( 6, 6 ) );
-      agent1.setHeading( new Heading( 10, 10 ) );
+      agent1.setHeading( FixedHeading.SE_55.heading() );
+      subjectAgent.setHeading( FixedHeading.SE_55.heading() );
       
       neighbours.addAll( agent1 );
       assertThat( systemUnderTest.respondToNeighbours(), is( false ) );
-      assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
+      assertThat( subjectAgent.heading().get(), is( FixedHeading.SE_55.heading() ) );
    }//End Method
    
    @Test public void shouldTakeTheLeadIfVelocityIsZero() {
@@ -114,5 +115,4 @@ public class SwarmingNatureImplTest {
       assertThat( subjectAgent.heading().get(), is( new Heading( 10, 10 ) ) );
    }//End Method
 
-   
 }//End Class
