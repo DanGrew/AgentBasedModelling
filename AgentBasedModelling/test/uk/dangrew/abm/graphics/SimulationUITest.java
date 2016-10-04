@@ -3,7 +3,8 @@ package uk.dangrew.abm.graphics;
 import static uk.dangrew.abm.model.environment.EnvironmentPositioningForTests.environmentPosition;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.Before;
@@ -24,15 +25,18 @@ public class SimulationUITest {
    @Before public void initialiseSystemUnderTest() {
       TestApplication.startPlatform();
       
-      environment = new Environment( 100, 100 );
+      environment = new Environment( 150, 100 );
 //      environment.applyHorizontalBoundary( 0, 0, 100 );
 //      environment.applyHorizontalBoundary( 99, 0, 100 );
 //      environment.applyVerticalBoundary( 0, 0, 100 );
 //      environment.applyVerticalBoundary( 0, 99, 100 );
       
       environment.applyVerticalBoundary( 30, 20, 40 );
-      environment.applyVerticalBoundary( 30, 50, 40 );
-      environment.applyVerticalBoundary( 30, 80, 40 );
+      environment.applyHorizontalBoundary( 70, 20, 40 );
+      environment.applyVerticalBoundary( 70, 60, -40 );
+      environment.applyHorizontalBoundary( 30, 60, 40 );
+      environment.applyVerticalBoundary( 30, 100, 40 );
+      environment.applyHorizontalBoundary( 70, 100, 40 );
       
       
       systemUnderTest = new SimulationUI( environment );
@@ -53,7 +57,8 @@ public class SimulationUITest {
       while( true ) {
          Thread.sleep( 50 );
          
-         Collection< Agent > agents = new ArrayList<>( environment.agents().values() );
+         List< Agent > agents = new ArrayList<>( environment.agents().values() );
+         Collections.shuffle( agents );
          agents.forEach( a -> a.move( environment ) );
       }
    }//End Method

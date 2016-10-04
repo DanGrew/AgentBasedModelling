@@ -44,4 +44,10 @@ interface ControllableAgent extends Agent {
     * @param drive the frequency to mate.
     */
    public void setMatingCycle( int drive );
+   
+   /** 
+    * Method to set the movement speed of the {@link Agent}.
+    * @param movementSpeed the movement speed to set.
+    */
+   public void setMovementSpeed( double movementSpeed );
 }//End Interface

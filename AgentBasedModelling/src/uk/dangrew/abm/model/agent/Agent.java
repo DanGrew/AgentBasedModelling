@@ -50,6 +50,12 @@ public interface Agent {
     * @return the time between each mating attempt.
     */
    public int matingCycle();
+   
+   /**
+    * Access to the current movement speed of the {@link Agent}.
+    * @return the property.
+    */
+   public ReadOnlyObjectProperty< Double > movementSpeed();
 
    /**
     * Method to move the {@link Agent} according to their current prerogative.

@@ -52,6 +52,9 @@ public class FluidMovementInterpolator implements MovementInterpolator {
       double hStep = agent.heading().get().horizontalVelocity() * proportion;
       double vStep = agent.heading().get().verticalVelocity() * proportion;
       
+//      double hStep = agent.heading().get().horizontalVelocity() * agent.movementSpeed().get();
+//      double vStep = agent.heading().get().verticalVelocity() * agent.movementSpeed().get();
+      
       horizontal += hStep;
       vertical += vStep;
       

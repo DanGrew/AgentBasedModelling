@@ -12,12 +12,13 @@ class Lifecycle {
 
    static final int STATIONARY_LIMIT = 50;
    static final int MAXIMUM_MATING_CYCLE = 30;
+   
    static final int BASE_AGE = 1000;
    static final int MAX_AGE_BOOST = BASE_AGE / 4;
    static final int YOUTH_COME_OF_AGE = BASE_AGE / 5;
    static final int ADULT_COME_OF_AGE = YOUTH_COME_OF_AGE * 2;
    static final int ELDER_COME_OF_AGE = BASE_AGE - ( BASE_AGE / 10 );
-   static final int REMOVE_FROM_ENVIRONMENT_AFTER = BASE_AGE / 10;
+   static final int REMOVE_FROM_ENVIRONMENT_AFTER = 1;//BASE_AGE / 10;
    
    private final Random random;
    private ControllableAgent agent;
@@ -118,5 +119,5 @@ class Lifecycle {
          return AgeBracket.Complete;
       }
    }//End Method
-
+   
 }//End Class

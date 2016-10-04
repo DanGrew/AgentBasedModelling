@@ -15,6 +15,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    private final ObjectProperty< EnvironmentPosition > position;
    private final ObjectProperty< Integer > age;
    private final ObjectProperty< Integer > lifeExpectancy;
+   private final ObjectProperty< Double > movementSpeed;
    private Gender gender;
    private int reproductiveDrive;
    
@@ -60,6 +61,7 @@ public class AgentImpl implements Agent, ControllableAgent {
       this.heading = new SimpleObjectProperty< Heading >( heading );
       this.age = new SimpleObjectProperty<>();
       this.lifeExpectancy = new SimpleObjectProperty<>();
+      this.movementSpeed = new SimpleObjectProperty<>();
       
       this.interpolator = interpolator;
       this.interpolator.associate( this );
@@ -154,6 +156,20 @@ public class AgentImpl implements Agent, ControllableAgent {
     */
    @Override public void setMatingCycle( int drive ) {
       this.reproductiveDrive = drive;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public ReadOnlyObjectProperty< Double > movementSpeed() {
+      return movementSpeed;
+   }//End Method
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override public void setMovementSpeed( double movementSpeed ) {
+      this.movementSpeed.set( movementSpeed );
    }//End Method
    
    /**

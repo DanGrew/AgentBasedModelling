@@ -181,4 +181,9 @@ public class AgentImplTest {
       verify( parentHood ).mingle( environment );
    }//End Method
    
+   @Test public void shouldProvideMovementSpeedAndAllowSetting(){
+      systemUnderTest.setMovementSpeed( 10.2 );
+      assertThat( systemUnderTest.movementSpeed().get(), is( 10.2 ) );
+   }//End Method
+   
 }//End Class
