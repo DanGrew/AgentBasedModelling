@@ -19,5 +19,12 @@ public class FixedHeadingTest {
          assertThat( heading.heading().verticalVelocity(), is( heading.vertical() ) );
       }
    }//End Method
+   
+   @Test public void headingsProvideOppositeHeading() {
+      for ( FixedHeading heading : FixedHeading.values() ) {
+         assertThat( heading.opposite().horizontalVelocity(), is( -heading.horizontal() ) );
+         assertThat( heading.opposite().verticalVelocity(), is( -heading.vertical() ) );
+      }
+   }//End Method
 
 }//End Class

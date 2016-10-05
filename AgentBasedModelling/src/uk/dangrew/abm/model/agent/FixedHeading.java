@@ -50,6 +50,7 @@ enum FixedHeading {
    private final int vertical;
    private final int horionztal;
    private final Heading heading;
+   private final Heading opposite;
    
    /**
     * Constructs a new {@link FixedHeading}.
@@ -60,6 +61,7 @@ enum FixedHeading {
       this.vertical = vertical;
       this.horionztal = horizontal;
       this.heading = new Heading( vertical, horizontal );
+      this.opposite = new Heading( -vertical, -horizontal );
    }//End Constructor
    
    /**
@@ -84,5 +86,13 @@ enum FixedHeading {
     */
    public Heading heading(){
       return heading;
+   }//End Method
+   
+   /**
+    * Access to the {@link Heading} in the opposite direction.
+    * @return the {@link Heading} in the opposite direction.
+    */
+   public Heading opposite(){
+      return opposite;
    }//End Method
 }//End Enum
