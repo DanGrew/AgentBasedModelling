@@ -16,9 +16,9 @@ interface NeighbourHood {
    
    /**
     * Access to the {@link ObservableList} of {@link Agent}s in the {@link NeighbourHood}.
-    * @return an unmodifiable version of the nieghbours.
+    * @return an unmodifiable version of the neighbours.
     */
-   public ObservableList< Agent > neighbours();
+   public ObservableList< Agent > neighbours( NeighbourHoodRange range );
 
    /**
     * Method to identify the {@link Agent}s in the {@link NeighbourHood}.
