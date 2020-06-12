@@ -39,7 +39,7 @@ public class MaleParentHoodTest {
       MockitoAnnotations.initMocks( this );
       
       neighbours = FXCollections.observableArrayList();
-      when( neighbourHood.neighbours() ).thenReturn( neighbours );
+      when( neighbourHood.neighbours( NeighbourHoodRange.Separation ) ).thenReturn( neighbours );
       when( femaleNeighbour1.gender() ).thenReturn( Gender.Female );
       when( femaleNeighbour1.getAgeBracket() ).thenReturn( AgeBracket.Adult );
       when( femaleNeighbour2.gender() ).thenReturn( Gender.Female );

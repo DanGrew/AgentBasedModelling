@@ -53,18 +53,26 @@ class SwarmingNatureImpl implements SwarmingNature {
     * {@inheritDoc}
     */
    @Override public boolean respondToNeighbours() {
-      if ( neighbourHood.neighbours().isEmpty() ) {
+//      if ( agent.getAgeBracket() == AgeBracket.Infant ) {
+//         Heading proposed = new InfantPositioning().findHeadingToAdultCenteredPosition( agent, neighbourHood );
+//         if ( proposed != null ) {
+//            agent.setHeading( proposed );
+//            return true;
+//         }
+//      }
+      
+      if ( neighbourHood.neighbours( NeighbourHoodRange.Separation ).isEmpty() ) {
          return false;
       }
       
       double averageH = 0.0;
       double averageV = 0.0;
-      for( Agent agent : neighbourHood.neighbours() ) {
+      for( Agent agent : neighbourHood.neighbours( NeighbourHoodRange.Separation ) ) {
          averageH += agent.heading().get().horizontalVelocity();
          averageV += agent.heading().get().verticalVelocity();
       }
-      averageH /= neighbourHood.neighbours().size();
-      averageV /= neighbourHood.neighbours().size();
+      averageH /= neighbourHood.neighbours( NeighbourHoodRange.Separation ).size();
+      averageV /= neighbourHood.neighbours( NeighbourHoodRange.Separation ).size();
       
       int headingH = ( int )Math.round( averageH );
       int headingV = ( int )Math.round( averageV );

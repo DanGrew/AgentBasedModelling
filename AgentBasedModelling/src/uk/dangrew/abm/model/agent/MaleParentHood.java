@@ -73,7 +73,7 @@ class MaleParentHood implements ParentHood {
          return;
       }
       
-      List< Agent > females = neighbourHood.neighbours()
+      List< Agent > females = neighbourHood.neighbours( NeighbourHoodRange.Separation )
                .filtered( agent -> agent.gender() == Gender.Female )
                .filtered( agent -> isMatingAge( agent ) );
       if ( females.isEmpty() ) {

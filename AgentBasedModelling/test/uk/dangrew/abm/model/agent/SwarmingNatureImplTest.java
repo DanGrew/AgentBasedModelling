@@ -35,7 +35,7 @@ public class SwarmingNatureImplTest {
       MockitoAnnotations.initMocks( this );
       environment = new Environment( 10, 10 );
       neighbours = FXCollections.observableArrayList();
-      when( neighbourHood.neighbours() ).thenReturn( neighbours );
+      when( neighbourHood.neighbours( NeighbourHoodRange.Separation ) ).thenReturn( neighbours );
       
       agent1 = new AgentImpl( environmentPosition( 0, 0 ), new Heading( 1, 1 ) );
       environment.monitorAgent( agent1 );

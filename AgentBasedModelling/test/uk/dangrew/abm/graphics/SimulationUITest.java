@@ -25,31 +25,31 @@ public class SimulationUITest {
    @Before public void initialiseSystemUnderTest() {
       TestApplication.startPlatform();
       
-      environment = new Environment( 150, 100 );
+      environment = new Environment( 50, 50 );
 //      environment.applyHorizontalBoundary( 0, 0, 100 );
 //      environment.applyHorizontalBoundary( 99, 0, 100 );
 //      environment.applyVerticalBoundary( 0, 0, 100 );
 //      environment.applyVerticalBoundary( 0, 99, 100 );
       
-      environment.applyVerticalBoundary( 30, 20, 40 );
-      environment.applyHorizontalBoundary( 70, 20, 40 );
-      environment.applyVerticalBoundary( 70, 60, -40 );
-      environment.applyHorizontalBoundary( 30, 60, 40 );
-      environment.applyVerticalBoundary( 30, 100, 40 );
-      environment.applyHorizontalBoundary( 70, 100, 40 );
+//      environment.applyVerticalBoundary( 30, 20, 40 );
+//      environment.applyHorizontalBoundary( 70, 20, 40 );
+//      environment.applyVerticalBoundary( 70, 60, -40 );
+//      environment.applyHorizontalBoundary( 30, 60, 40 );
+//      environment.applyVerticalBoundary( 30, 100, 40 );
+//      environment.applyHorizontalBoundary( 70, 100, 40 );
       
       
       systemUnderTest = new SimulationUI( environment );
       
       Random random = new Random();
-      for ( int i = 0; i < 100; i++ ) {
-         Agent agent = new AgentImpl( environmentPosition( random.nextInt( 100 ), random.nextInt( 100 ) ), new Heading( random.nextInt( 10 ), random.nextInt( 10 ) ) );
+      for ( int i = 0; i < 10; i++ ) {
+         Agent agent = new AgentImpl( environmentPosition( random.nextInt( 50 ), random.nextInt( 50 ) ), new Heading( random.nextInt( 10 ), random.nextInt( 10 ) ) );
          environment.monitorAgent( agent );
          System.out.println( agent.position() );
       }
    }//End Method
 
-   @Ignore
+//   @Ignore
    @Test public void manual() throws InterruptedException {
       TestApplication.launch( () -> systemUnderTest );
       

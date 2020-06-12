@@ -33,7 +33,7 @@ public class AgentImpl implements Agent, ControllableAgent {
    public AgentImpl( EnvironmentPosition position, Heading heading ) {
       this( 
                new FluidMovementInterpolator(), 
-               new SwarmingNatureImpl(), 
+               new BoidsSwarmingNature(), 
                new NeighbourHoodImpl(), 
                new Lifecycle(),
                position, heading 
@@ -199,9 +199,9 @@ public class AgentImpl implements Agent, ControllableAgent {
       }
       neighbourHood.identifyNeighbourHood( environment );
       swarmingNature.respondToNeighbours();
-      parentHood.mingle( environment );
+//      parentHood.mingle( environment );
       if ( interpolator.move( environment ) ) {
-         swarmingNature.randomizeHeading();
+//         swarmingNature.randomizeHeading();
       }
    }//End Method
    

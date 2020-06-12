@@ -31,7 +31,7 @@ public class InfantPositioningTest {
    @Before public void initialiseSystemUnderTest() {
       MockitoAnnotations.initMocks( this );
       neighbours = FXCollections.observableArrayList();
-      when( neighbourHood.neighbours() ).thenReturn( neighbours );
+      when( neighbourHood.neighbours( NeighbourHoodRange.Separation ) ).thenReturn( neighbours );
       
       infant = new AgentImpl( environmentPosition( 0, 0 ), FixedHeading.EAST.heading() );
       LifecycleTesting.setAgeBracket( infant, AgeBracket.Infant );

@@ -25,7 +25,7 @@ class InfantPositioning {
     * @return the {@link Heading} found to achieve that.
     */
    public Heading findHeadingToAdultCenteredPosition( Agent subject, NeighbourHood neighbourHood ) {
-      List< Agent > adults = neighbourHood.neighbours().filtered( agent -> {
+      List< Agent > adults = neighbourHood.neighbours( NeighbourHoodRange.Cohesion ).filtered( agent -> {
          switch ( agent.getAgeBracket() ) {
             case Adult:
                return true;
